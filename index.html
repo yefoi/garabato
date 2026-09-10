@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="crt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GARABATO.EXE — el virus que dibuja</title>
+<meta name="description" content="GARABATO.EXE: escribe una palabra y el virus dibuja. Galería generativa de garabatos pixelados, glitcheados y caóticos. Tus dibujos viven solo en tu navegador.">
+<meta name="author" content="GARABATO.EXE">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'><rect width='16' height='16' fill='%2307070d'/><rect x='2' y='2' width='12' height='12' fill='%23d8d8ea'/><rect x='4' y='4' width='8' height='8' fill='%2300ffe1'/><rect x='6' y='6' width='4' height='4' fill='%23ff2bd1'/><rect x='7' y='7' width='2' height='2' fill='%2307070d'/></svg>">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+<a class="salto" href="#contenido">Saltar al contenido</a>
+<div class="barra-progreso" aria-hidden="true"></div>
+
+<header class="cabecera">
+  <div class="marquesina" aria-hidden="true">
+    <div class="cinta">
+      <span>*** GARABATO.EXE v0.5 *** EL VIRUS DIBUJA *** PIXELES *** GLITCH *** GENERA LOS TUYOS *** SIN COOKIES ***&nbsp;</span>
+      <span>*** GARABATO.EXE v0.5 *** EL VIRUS DIBUJA *** PIXELES *** GLITCH *** GENERA LOS TUYOS *** SIN COOKIES ***&nbsp;</span>
+    </div>
+  </div>
+  <div class="mastil">
+    <a class="sello" href="index.html" aria-label="GARABATO.EXE, galería">
+      <svg viewBox="0 0 16 16" role="img" aria-hidden="true" shape-rendering="crispEdges">
+        <rect x="0" y="0" width="16" height="16" fill="#07070d"></rect>
+        <rect x="2" y="2" width="12" height="12" fill="#d8d8ea"></rect>
+        <rect x="4" y="4" width="8" height="8" fill="#00ffe1"></rect>
+        <rect x="6" y="6" width="4" height="4" fill="#ff2bd1"></rect>
+        <rect x="7" y="7" width="2" height="2" fill="#07070d"></rect>
+      </svg>
+    </a>
+    <div class="titulos">
+      <p class="marca"><a href="index.html" data-scramble>GARABATO.EXE</a></p>
+      <p class="lema">EL VIRUS QUE DIBUJA // v0.5</p>
+    </div>
+    <p class="contador-visitas"><span class="etiqueta-contador">DIBUJOS</span> <span data-total>000</span></p>
+  </div>
+  <nav class="menu" aria-label="Principal">
+    <a href="#generador">[ GENERAR ]</a>
+    <a href="#pared">[ PARED ]</a>
+    <button class="tema" type="button" data-accion="tema" aria-pressed="true">[ CRT: ON ]</button>
+  </nav>
+</header>
+
+<main id="contenido">
+
+  <section class="heroe">
+    <div>
+      <h2><span class="glitch" data-text="ESCRIBE UNA PALABRA">ESCRIBE UNA PALABRA</span> Y EL VIRUS DIBUJA.</h2>
+      <p class="entradilla">un disquette. un virus. papel infinito.</p>
+    </div>
+    <div class="escanner">DISQUETTE: conectado :: virus: activo :: papel: infinito <span class="sellos" data-sellos aria-label="sellos"></span></div>
+  </section>
+
+  <section class="generador" id="generador" aria-labelledby="titulo-generador">
+    <h2 id="titulo-generador">GENERADOR</h2>
+    <input type="text" id="prompt" data-prompt placeholder="gato astronauta" aria-label="semilla" autocomplete="off">
+    <div class="controles">
+      <button class="boton" type="button" data-accion="generar">GENERAR DIBUJO</button>
+      <button class="boton claro" type="button" data-accion="suerte">SUERTE</button>
+      <button class="boton claro" type="button" data-accion="nivel" aria-pressed="false">[ GLITCH: NORMAL ]</button>
+      <button class="boton claro" type="button" data-accion="mas-glitch">MÁS GLITCH A TODO</button>
+      <button class="boton claro" type="button" data-accion="bajar">DESCARGAR PARED</button>
+      <button class="boton claro" type="button" data-accion="limpiar">VACIAR</button>
+      <button class="boton claro" type="button" data-accion="auto" aria-pressed="false">[ AUTO: OFF ]</button>
+      <button class="boton claro" type="button" data-accion="compartir">COMPARTIR PARED</button>
+      <button class="boton claro" type="button" data-accion="grabar">GRABAR CORRUPCIÓN</button>
+      <button class="boton claro" type="button" data-accion="variantes">4 VARIANTES</button>
+      <button class="boton claro" type="button" data-accion="papelera">PAPELERA</button>
+      <button class="boton claro" type="button" data-accion="exportar">EXPORTAR</button>
+      <button class="boton claro" type="button" data-accion="importar">IMPORTAR</button>
+      <button class="boton claro" type="button" data-accion="tv" aria-pressed="false">[ TV: OFF ]</button>
+      <button class="boton claro" type="button" data-accion="ligero" aria-pressed="false">[ LIGERO: OFF ]</button>
+      <button class="boton claro" type="button" data-accion="contraste" aria-pressed="false">[ CONTRASTE: OFF ]</button>
+      <button class="boton claro" type="button" data-accion="camara">CÁMARA</button>
+    </div>
+    <p class="semillas" aria-label="Sugerencias">
+      <button class="chip" type="button" data-chip-prompt="gato">gato</button>
+      <button class="chip" type="button" data-chip-prompt="perro">perro</button>
+      <button class="chip" type="button" data-chip-prompt="dino">dino</button>
+      <button class="chip" type="button" data-chip-prompt="robot">robot</button>
+      <button class="chip" type="button" data-chip-prompt="unicornio">unicornio</button>
+      <button class="chip" type="button" data-chip-prompt="ballena">ballena</button>
+      <button class="chip" type="button" data-chip-prompt="tortuga">tortuga</button>
+      <button class="chip" type="button" data-chip-prompt="caracol">caracol</button>
+      <button class="chip" type="button" data-chip-prompt="helado">helado</button>
+      <button class="chip" type="button" data-chip-prompt="monstruo">monstruo</button>
+      <button class="chip" type="button" data-chip-prompt="cohete">cohete</button>
+      <button class="chip" type="button" data-chip-prompt="ovni">ovni</button>
+      <button class="chip" type="button" data-chip-prompt="castillo">castillo</button>
+      <button class="chip" type="button" data-chip-prompt="corona">corona</button>
+      <button class="chip" type="button" data-chip-prompt="globo">globo</button>
+      <button class="chip" type="button" data-chip-prompt="fiesta">fiesta</button>
+      <button class="chip" type="button" data-chip-prompt="estrella">estrella</button>
+      <button class="chip" type="button" data-chip-prompt="arcoiris">arcoíris</button>
+      <button class="chip" type="button" data-chip-prompt="rana">rana</button>
+      <button class="chip" type="button" data-chip-prompt="leon">león</button>
+      <button class="chip" type="button" data-chip-prompt="pinguino">pingüino</button>
+      <button class="chip" type="button" data-chip-prompt="elefante">elefante</button>
+      <button class="chip" type="button" data-chip-prompt="conejo">conejo</button>
+      <button class="chip" type="button" data-chip-prompt="buho">búho</button>
+      <button class="chip" type="button" data-chip-prompt="tarta">tarta</button>
+      <button class="chip" type="button" data-chip-prompt="barco">barco</button>
+      <button class="chip" type="button" data-chip-prompt="molino">molino</button>
+      <button class="chip" type="button" data-chip-prompt="gafas">gafas</button>
+      <button class="chip" type="button" data-chip-prompt="bigote">bigote</button>
+      <button class="chip" type="button" data-chip-prompt="balon">balón</button>
+      <button class="chip" type="button" data-chip-prompt="nina">niña</button>
+      <button class="chip" type="button" data-chip-prompt="princesa">princesa</button>
+      <button class="chip" type="button" data-chip-prompt="pirata">pirata</button>
+      <button class="chip" type="button" data-chip-prompt="bruja">bruja</button>
+      <button class="chip" type="button" data-chip-prompt="fantasma">fantasma</button>
+      <button class="chip" type="button" data-chip-prompt="dragon">dragón</button>
+      <button class="chip" type="button" data-chip-prompt="vaca">vaca</button>
+      <button class="chip" type="button" data-chip-prompt="zorro">zorro</button>
+      <button class="chip" type="button" data-chip-prompt="heroe">superhéroe</button>
+      <button class="chip" type="button" data-chip-prompt="coche">coche</button>
+      <button class="chip" type="button" data-chip-prompt="tren">tren</button>
+      <button class="chip" type="button" data-chip-prompt="avion">avión</button>
+      <button class="chip" type="button" data-chip-prompt="cometa">cometa</button>
+      <button class="chip" type="button" data-chip-prompt="aerostatico">globo aerostático</button>
+      <button class="chip" type="button" data-chip-prompt="volcan">volcán</button>
+      <button class="chip" type="button" data-chip-prompt="gato en la playa">gato en la playa</button>
+      <button class="chip" type="button" data-chip-prompt="dino en la nieve">dino en la nieve</button>
+      <button class="chip" type="button" data-chip-prompt="robot en el colegio">robot en el colegio</button>
+    </p>
+  </section>
+
+  <div class="seccion-titulo" id="pared">
+    <h2>LA PARED</h2>
+    <p>se genera contigo</p>
+  </div>
+
+  <div class="pared" data-pared></div>
+
+</main>
+
+<footer class="pie">
+  <div class="badges" aria-hidden="true">
+    <span class="badge-88 b1">GARABATO<br>.EXE</span>
+    <span class="badge-88 b2">PIXEL<br>ART</span>
+    <span class="badge-88 b3">SIN<br>COOKIES</span>
+    <span class="badge-88 b4">EN<br>OBRAS</span>
+  </div>
+  <pre class="ascii" aria-hidden="true"> .----------------.
+ | GARABATO.EXE   |
+ | &gt; virus: activo |
+ | &gt; papel: infinito |
+ '----------------'</pre>
+  <p>© <span data-anio>2026</span> GARABATO.EXE · GENERADO EN TU NAVEGADOR, GUARDADO EN TU NAVEGADOR, TUYO</p>
+  <p class="nota">MEJOR VISTO A 1024x768 · SIN ANALITICA · SIN GURUS</p>
+</footer>
+
+<script src="js/zetetica.js"></script>
+<script src="js/galeria.js"></script>
+</body>
+</html>
