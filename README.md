@@ -1,13 +1,13 @@
 # GARABATO.EXE
 
-**El virus que dibuja.**
+**Generador de garabatos.**
 
-Generador net.art de dibujos de niños procedurales: escribes una palabra, el virus dibuja, lo corrompe y lo cuelga en una pared que crece contigo. HTML/CSS/JS puro: sin dependencias, sin servidor, sin cookies, sin analítica.
+Generador net.art de dibujos de niños procedurales: escribes una palabra, se genera un garabato, se corrompe a propósito y se queda en una pared que crece contigo. HTML/CSS/JS puro: sin dependencias, sin servidor, sin cookies, sin analítica.
 
 ```
    .----------------.
    | GARABATO.EXE   |
-   | > virus: activo |
+   | > garabato: ON |
    | > papel: infinito
    '----------------'
 ```

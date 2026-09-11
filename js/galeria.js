@@ -2252,7 +2252,7 @@
 
   var FRASES_VIRUS = [
     "se ha perdido un color. no sabemos cuál.",
-    "el disquette sueña con una niña.",
+    "el disquette sueña con un niño.",
     "píxel 4812: desaparecido.",
     "el escáner tiene hambre.",
     "alguien ha dibujado encima de tu infancia.",
