@@ -2796,17 +2796,17 @@
     return null;
   };
 
-  var FRASES_VIRUS = [
-    "se ha perdido un color. no sabemos cuál.",
-    "el disquette sueña con un niño.",
-    "píxel 4812: desaparecido.",
-    "el escáner tiene hambre.",
-    "alguien ha dibujado encima de tu infancia.",
-    "error 0x00: demasiado bonito para este monitor.",
-    "la pared respira cuando no miras.",
-    "no todos los dibujos vuelven.",
-    "cinta adhesiva insuficiente.",
-    "un lápiz se quedó sin punta en 1994."
+  var CONSEJOS = [
+    "todo se guarda en este navegador.",
+    "sin cookies ni servidor.",
+    "exporta la pared desde MÁS OPCIONES.",
+    "pulsa Z en un dibujo para verlo en grande.",
+    "arrastra los dibujos para ordenarlos.",
+    "cada dibujo tiene una semilla única.",
+    "el modo se guarda por dibujo.",
+    "clic en un dibujo para corromperlo.",
+    "el botón M crea una variación.",
+    "el botón de pintar te deja dibujar encima."
   ];
 
   var corromper = function (texto, azar) {
@@ -3290,7 +3290,7 @@
     if (secreto) {
       marcarSello(secreto);
     } else if (contadorGeneraciones % 6 === 0) {
-      mostrarVirus(FRASES_VIRUS[Math.floor(Math.random() * FRASES_VIRUS.length)]);
+      mostrarVirus(CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)]);
     }
     if (registros.length > MAXIMO) {
       registros = registros.slice(0, MAXIMO);
@@ -3342,7 +3342,7 @@
       pared.appendChild(tile);
     }
     actualizarTotales();
-    mostrarVirus("ha nacido algo. no preguntes de qué.");
+    mostrarVirus("variación creada.");
   };
 
   var CLAVE_SELLOS = "zetetica-sellos";
@@ -3503,7 +3503,7 @@
       actualizarTile(registro);
       capa.classList.remove("abierto");
       capa.setAttribute("aria-hidden", "true");
-      mostrarVirus("tinta seca. ahora es más tuyo.");
+      mostrarVirus("pintura guardada.");
     });
     return estado;
   };
@@ -3546,7 +3546,7 @@
           }
         }
       }, 9000);
-      mostrarVirus("modo automático: la pared se dibuja sola.");
+      mostrarVirus("modo automático activado.");
     }
     if (botonAuto) {
       botonAuto.textContent = modoAuto ? "[ AUTO: ON ]" : "[ AUTO: OFF ]";
@@ -3621,7 +3621,7 @@
     var enlace = window.location.href.split("#")[0] + "#pared=" + encodeURIComponent(JSON.stringify(datos));
     if (window.navigator && navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(enlace).then(function () {
-        mostrarVirus("enlace copiado. pásalo por donde quieras.");
+        mostrarVirus("enlace copiado.");
       }, function () {
         window.prompt("copia el enlace:", enlace);
       });
@@ -3634,7 +3634,7 @@
     var figura = pared.firstChild;
     var lienzoGrabar = figura && figura.querySelector ? figura.querySelector("canvas") : null;
     if (!lienzoGrabar || !window.MediaRecorder || !lienzoGrabar.captureStream) {
-      mostrarVirus("el escáner no puede grabar aquí.");
+      mostrarVirus("este navegador no puede grabar vídeo.");
       return;
     }
     try {
@@ -3665,9 +3665,9 @@
           grabador.stop();
         }
       }, 120);
-      mostrarVirus("grabando la corrupción en curso.");
+      mostrarVirus("grabando vídeo...");
     } catch (error) {
-      mostrarVirus("el escáner no puede grabar aquí.");
+      mostrarVirus("este navegador no puede grabar vídeo.");
     }
   };
 
@@ -4043,7 +4043,7 @@
     }
     delete cacheDibujos[registro.s];
     actualizarTotales();
-    mostrarVirus("alguien tiró un dibujo. sigue en la papelera.");
+    mostrarVirus("dibujo movido a la papelera.");
   };
 
   var panelPapelera = null;
@@ -4115,7 +4115,7 @@
       capa.querySelector("[data-pap-vaciar]").addEventListener("click", function () {
         guardarPapelera([]);
         pintarPanelPapelera();
-        mostrarVirus("papelera vaciada. que descansen.");
+        mostrarVirus("papelera vaciada.");
       });
     }
     pintarPanelPapelera();
@@ -4159,7 +4159,7 @@
           actualizarTotales();
           mutador.capa.classList.remove("abierto");
           mutador.capa.setAttribute("aria-hidden", "true");
-          mostrarVirus("variante elegida. las otras se fueron.");
+          mostrarVirus("variante añadida.");
         };
       })(candidato));
       mutador.cuadricula.appendChild(boton);
@@ -4655,7 +4655,7 @@
         return;
       }
       pintarModo();
-      mostrarVirus(modoActual === "a" ? "modo adultos: boli y aburrimiento." : "modo niños: crayón y colores.");
+      mostrarVirus(modoActual === "a" ? "modo adultos activado." : "modo niños activado.");
     });
   }
 
@@ -4676,7 +4676,7 @@
   if (recibida && recibida.length) {
     registros = recibida;
     paredCompartida = true;
-    mostrarVirus("pared recibida. si generas algo, se adopta.");
+    mostrarVirus("pared compartida cargada: se guardará al generar.");
   } else {
     registros = leerRegistros();
     if (!registros.length) {

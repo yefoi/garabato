@@ -2,7 +2,7 @@
 
 **Generador de garabatos.**
 
-Generador net.art de dibujos de niños procedurales: escribes una palabra, se genera un garabato, se corrompe a propósito y se queda en una pared que crece contigo. HTML/CSS/JS puro: sin dependencias, sin servidor, sin cookies, sin analítica.
+Generador net.art de dibujos de niños procedurales: escribes una palabra, se genera un garabato, se corrompe a propósito y se guarda en una pared local. HTML/CSS/JS puro: sin dependencias, sin servidor, sin cookies, sin analítica.
 
 ```
    .----------------.
@@ -14,7 +14,7 @@ Generador net.art de dibujos de niños procedurales: escribes una palabra, se ge
 
 ## Qué es
 
-GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se suben ni se descargan de ningún sitio: se dibujan en vivo en el navegador con Canvas a partir de una semilla de texto. La estética mezcla dibujo infantil, píxel art, glitch y caos de la vieja web: un escáner roto interpretando la infancia.
+GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se suben ni se descargan de ningún sitio: se dibujan en vivo en el navegador con Canvas a partir de una semilla de texto. El estilo mezcla dibujo infantil, píxel art y glitch; el resultado se corrompe a propósito.
 
 ## Capturas
 
@@ -79,7 +79,7 @@ _blog_antiguo/    archivo del proyecto anterior (blog zetético)
 
 ## Estado
 
-Experimento en obras permanentes. Se aceptan fallos raros como parte del encanto.
+Experimento en desarrollo. Puede tener fallos.
 
 ## Licencia
 
