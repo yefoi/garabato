@@ -152,11 +152,6 @@ html.agitado main {
   50% { opacity: 0; }
 }
 
-@keyframes cinta {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 @keyframes glitch-a {
   0%, 86% { clip-path: inset(0 0 100% 0); }
   87% { clip-path: inset(0 0 52% 0); transform: translate(-6px, 2px); }
@@ -270,32 +265,6 @@ h3,
   max-width: var(--ancho);
   margin: 0 auto;
   padding: 0.7rem 1rem 0;
-}
-
-.marquesina {
-  overflow: hidden;
-  background: var(--panel);
-  border-top: 4px solid var(--linea);
-  border-bottom: 4px solid var(--linea);
-}
-
-.cinta {
-  display: flex;
-  white-space: nowrap;
-  animation: cinta 26s linear infinite;
-  font-family: var(--pixel);
-  font-size: 0.56rem;
-  color: var(--acido);
-  padding: 0.5rem 0;
-}
-
-.cinta span {
-  flex: 0 0 auto;
-  padding-right: 3rem;
-}
-
-.marquesina:hover .cinta {
-  animation-play-state: paused;
 }
 
 .mastil {
