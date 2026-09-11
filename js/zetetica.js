@@ -192,13 +192,16 @@
       ctxLluvia.clearRect(0, 0, lluvia.width, lluvia.height);
       return;
     }
-    ctxLluvia.fillStyle = "rgba(3, 3, 10, 0.14)";
+    ctxLluvia.globalCompositeOperation = "destination-out";
+    ctxLluvia.fillStyle = "rgba(0, 0, 0, 0.09)";
     ctxLluvia.fillRect(0, 0, lluvia.width, lluvia.height);
+    ctxLluvia.globalCompositeOperation = "source-over";
     ctxLluvia.font = celda + "px monospace";
     for (var i = 0; i < columnas; i++) {
       var glifo = glifos.charAt(Math.floor(Math.random() * glifos.length));
       var y = posiciones[i] * celda;
-      ctxLluvia.fillStyle = Math.random() < 0.08 ? "#ff2bd1" : "#00ffe1";
+      var tinta = Math.random();
+      ctxLluvia.fillStyle = tinta < 0.08 ? "#ff2bd1" : (tinta < 0.22 ? "#d8d8ea" : "#00ffe1");
       ctxLluvia.fillText(glifo, i * celda, y);
       if (y > lluvia.height && Math.random() > 0.972) {
         posiciones[i] = 0;
