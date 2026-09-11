@@ -26,6 +26,8 @@ GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se s
 
 ![Modo adultos](img/adultos.png)
 
+![Escenas](img/escenas.png)
+
 ## Cómo se usa
 
 - Abre `index.html` en un navegador moderno. No hace falta build, servidor ni instalar nada.
@@ -35,8 +37,14 @@ GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se s
 
 ## Qué hace
 
-- **54 sujetos** dibujados por código, más **quimeras por partes**: 25 cabezas × 14 cuerpos × 14 fondos.
+- **54 sujetos** dibujados por código, más **quimeras por partes**: 35 cabezas × 20 cuerpos × 14 fondos.
+- **8 perfiles de trazo**: niño pequeño, aplicado, cansado, nervioso, zurdo, pulcro, coloreador y minimalista. Cambian temblor, grosor, presión y densidad de relleno de todos los dibujos.
+- **6 papeles**: clásico, cartulina de color, folio arrugado, hoja de examen, servilleta y hoja de cómic.
+- **3 formatos**: vertical, apaisado y cuadrado, que rompen la cuadrícula de la pared.
 - **Dos modos**: NIÑOS (crayón, colores, fondos y firmas) y ADULTOS (boli azul sobre papel de cuaderno: línea suelta, garabatos de aburrimiento, listas tachadas y texto ilegible). El modo se guarda en cada dibujo.
+- **Modo mezcla**: dos estilos conviviendo en la misma hoja, mitad crayón y mitad boli.
+- **Escenas temáticas**: cumpleaños, playa, espacio, colegio, halloween y navidad, con varias piezas por escena.
+- **Temporada automática**: algunos dibujos salen con motivos de la estación según la fecha (35% de probabilidad).
 - **18 accesorios**, 14 fondos, 6 climas, 4 marcos, 6 tintes × 5 modos de color, espejo horizontal, rótulo manuscrito con letra escolar, firmas («por Lucía, 7 años») y sellos de profesor.
 - **Corrupción de escáner roto**: datamosh, canales RGB desplazados, pixel sort, bloques permutados y ruido de píxeles.
 - **Linaje**: mutar un dibujo engendra variantes con generación (`g1`, `g2`…) y padre registrado.

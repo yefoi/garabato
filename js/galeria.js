@@ -60,6 +60,106 @@
   var PAPELES = ["#f6f0e0", "#fdf3f7", "#eef6ff", "#f2ffe9", "#fff9e6", "#f3eefb"];
 
   var papel = function (ctx, azar) {
+    var tipo = Math.floor(azar() * 7);
+    if (tipo === 1) {
+      var cartulina = ["#9bd4ff", "#a8e6a1", "#ffb3c8", "#ffe28a", "#c9b6ff"][Math.floor(azar() * 5)];
+      ctx.fillStyle = cartulina;
+      ctx.fillRect(0, 0, L, A);
+      for (var c = 0; c < 10; c++) {
+        ctx.fillStyle = azar() < 0.5 ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.04)";
+        ctx.fillRect(Math.floor(azar() * L), Math.floor(azar() * A), 3 + Math.floor(azar() * 5), 1);
+      }
+      return;
+    }
+    if (tipo === 2) {
+      ctx.fillStyle = "#f4f2ea";
+      ctx.fillRect(0, 0, L, A);
+      for (var a1 = 0; a1 < 7; a1++) {
+        ctx.strokeStyle = "rgba(0,0,0,0.05)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        var x1 = azar() * L;
+        var y1 = azar() * A;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x1 + (azar() - 0.5) * L, y1 + (azar() - 0.5) * A);
+        ctx.stroke();
+      }
+      for (var m1 = 0; m1 < 3; m1++) {
+        ctx.fillStyle = "rgba(0,0,0,0.04)";
+        ctx.beginPath();
+        ctx.ellipse(azar() * L, azar() * A, 10 + azar() * 20, 6 + azar() * 14, azar() * 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      return;
+    }
+    if (tipo === 3) {
+      ctx.fillStyle = "#fdfcf5";
+      ctx.fillRect(0, 0, L, A);
+      ctx.strokeStyle = "rgba(60,60,90,0.5)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(8, 22);
+      ctx.lineTo(L - 8, 22);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(8, 30);
+      ctx.lineTo(L * 0.55, 30);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(200,90,90,0.6)";
+      ctx.beginPath();
+      ctx.moveTo(10, 0);
+      ctx.lineTo(10, A);
+      ctx.stroke();
+      ctx.fillStyle = "rgba(60,60,90,0.35)";
+      ctx.fillRect(8, 8, 3, 8);
+      ctx.fillRect(14, 8, 3, 8);
+      ctx.fillRect(20, 8, 3, 8);
+      for (var l3 = 36; l3 < A - 8; l3 += 14) {
+        ctx.strokeStyle = "rgba(120,140,180,0.25)";
+        ctx.beginPath();
+        ctx.moveTo(12, l3);
+        ctx.lineTo(L - 8, l3);
+        ctx.stroke();
+      }
+      return;
+    }
+    if (tipo === 4) {
+      ctx.fillStyle = "#f7f4ea";
+      ctx.fillRect(0, 0, L, A);
+      for (var dx4 = 6; dx4 < L; dx4 += 10) {
+        for (var dy4 = 6; dy4 < A; dy4 += 10) {
+          ctx.fillStyle = "rgba(0,0,0,0.035)";
+          ctx.fillRect(dx4, dy4, 2, 2);
+        }
+      }
+      ctx.strokeStyle = "rgba(0,0,0,0.08)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(4, 4, L - 8, A - 8);
+      ctx.setLineDash([3, 4]);
+      ctx.strokeRect(8, 8, L - 16, A - 16);
+      ctx.setLineDash([]);
+      return;
+    }
+    if (tipo === 5) {
+      ctx.fillStyle = "#fdf8ec";
+      ctx.fillRect(0, 0, L, A);
+      ctx.strokeStyle = "#1a1a22";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(3, 3, L - 6, A - 6);
+      ctx.beginPath();
+      ctx.moveTo(3, Math.round(A / 3));
+      ctx.lineTo(L - 3, Math.round(A / 3));
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(L / 2, Math.round(A / 3));
+      ctx.lineTo(L / 2, A - 3);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(3, Math.round((A * 2) / 3));
+      ctx.lineTo(L / 2, Math.round((A * 2) / 3));
+      ctx.stroke();
+      return;
+    }
     ctx.fillStyle = PAPELES[Math.floor(azar() * PAPELES.length)];
     ctx.fillRect(0, 0, L, A);
     for (var i = 0; i < 12; i++) {
@@ -67,8 +167,8 @@
       ctx.fillRect(Math.floor(azar() * L), Math.floor(azar() * A), 2 + Math.floor(azar() * 4), 1);
     }
     if (azar() < 0.6) {
-      var cx = 10 + azar() * 74;
-      var cy = 12 + azar() * 94;
+      var cx = 10 + azar() * (L - 22);
+      var cy = 12 + azar() * (A - 26);
       ctx.globalAlpha = 0.14;
       ctx.strokeStyle = "#8a6a3a";
       ctx.lineWidth = 2 + azar() * 2;
@@ -80,7 +180,7 @@
     if (azar() < 0.55) {
       ctx.fillStyle = "rgba(120,80,40,0.10)";
       ctx.beginPath();
-      ctx.ellipse(azar() * 78, azar() * 104, 4 + azar() * 8, 3 + azar() * 6, azar(), 0, Math.PI * 2);
+      ctx.ellipse(azar() * (L - 18), azar() * (A - 16), 4 + azar() * 8, 3 + azar() * 6, azar(), 0, Math.PI * 2);
       ctx.fill();
     }
     if (azar() < 0.45) {
@@ -96,7 +196,7 @@
       ctx.fill();
     }
     if (azar() < 0.35) {
-      var gy = 6 + azar() * 100;
+      var gy = 6 + azar() * (A - 12);
       ctx.fillStyle = "#9aa0b4";
       ctx.fillRect(2, gy, 5, 2);
       ctx.fillStyle = "#d8d8ea";
@@ -105,16 +205,28 @@
     if (azar() < 0.4) {
       ctx.fillStyle = "rgba(232,226,200,0.55)";
       if (azar() < 0.5) {
-        ctx.fillRect(0, azar() * 100, 10, 6);
+        ctx.fillRect(0, azar() * (A - 8), 10, 6);
       } else {
-        ctx.fillRect(L - 10, azar() * 100, 10, 6);
+        ctx.fillRect(L - 10, azar() * (A - 8), 10, 6);
       }
     }
   };
 
+  var PERFILES = [
+    { jitter: 3.4, ancho: 2.6, relleno: 0.8, densidad: 0.75 },
+    { jitter: 0.7, ancho: 1.2, relleno: 0.55, densidad: 0.5 },
+    { jitter: 2.1, ancho: 1.6, relleno: 0.28, densidad: 1.35 },
+    { jitter: 3.8, ancho: 1.4, relleno: 0.65, densidad: 0.7 },
+    { jitter: 2.3, ancho: 2.1, relleno: 0.6, densidad: 0.9 },
+    { jitter: 0.3, ancho: 1.1, relleno: 0.4, densidad: 0.45 },
+    { jitter: 1.7, ancho: 2.3, relleno: 0.98, densidad: 0.6 },
+    { jitter: 1.5, ancho: 1.3, relleno: 0.1, densidad: 1.7 }
+  ];
+  var perfilActual = { jitter: 1, ancho: 1, relleno: 0.55, densidad: 1 };
+
   var trazo = function (ctx, puntos, color, ancho, azar) {
     ctx.strokeStyle = color;
-    ctx.lineWidth = ancho || 1.5;
+    ctx.lineWidth = (ancho || 1.5) * perfilActual.ancho;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.beginPath();
@@ -128,7 +240,7 @@
       var pasos = Math.max(1, Math.round(largo / 5));
       for (var p = 0; p <= pasos; p++) {
         var t = p / pasos;
-        var desvio = p > 0 && p < pasos ? 1.6 : 0;
+        var desvio = p > 0 && p < pasos ? 1.6 * perfilActual.jitter : 0;
         var x = a[0] + dx * t + (azar() - 0.5) * desvio;
         var y = a[1] + dy * t + (azar() - 0.5) * desvio;
         if (primero) {
@@ -155,12 +267,12 @@
     ctx.fillStyle = color;
     poligono(ctx, puntos);
     ctx.fill();
-    if (azar && azar() < 0.55) {
+    if (azar && azar() < 0.15 + perfilActual.relleno * 0.6) {
       ctx.save();
       poligono(ctx, puntos);
       ctx.clip();
       ctx.globalAlpha = 0.45;
-      for (var x = -A; x < L + A; x += 5 + azar() * 4) {
+      for (var x = -A; x < L + A; x += (5 + azar() * 4) * perfilActual.densidad) {
         trazo(ctx, [[x, 0], [x + 10, A]], color, 1.1, azar);
       }
       ctx.restore();
@@ -1359,6 +1471,206 @@
     circulo(ctx, 50, 50, 2, C.celeste);
   };
 
+  var cLobo = function (ctx, azar) {
+    relleno(ctx, [[26, 24], [18, 6], [40, 18]], C.gris);
+    relleno(ctx, [[70, 24], [78, 6], [56, 18]], C.gris);
+    circulo(ctx, 48, 44, 22, C.gris);
+    aro(ctx, 48, 44, 22, C.negro, 2, azar);
+    relleno(ctx, [[36, 50], [60, 50], [56, 64], [40, 64]], "#d9d9e8");
+    trazo(ctx, [[36, 50], [60, 50], [56, 64], [40, 64], [36, 50]], C.negro, 1.4, azar);
+    punto(ctx, 40, 42, C.negro, 3);
+    punto(ctx, 56, 42, C.negro, 3);
+    circulo(ctx, 48, 56, 3.5, C.negro);
+    for (var d = 0; d < 3; d++) {
+      relleno(ctx, [[42 + d * 5, 64], [45 + d * 5, 64], [43 + d * 5, 68]], C.blanco);
+    }
+  };
+
+  var cOso = function (ctx, azar) {
+    circulo(ctx, 28, 28, 9, C.marron);
+    circulo(ctx, 68, 28, 9, C.marron);
+    circulo(ctx, 48, 46, 23, C.marron);
+    aro(ctx, 48, 46, 23, C.negro, 2, azar);
+    circulo(ctx, 28, 28, 4, "#8a5a2b");
+    circulo(ctx, 68, 28, 4, "#8a5a2b");
+    relleno(ctx, [[38, 52], [58, 52], [56, 64], [40, 64]], "#e8c9a0");
+    trazo(ctx, [[38, 52], [58, 52], [56, 64], [40, 64], [38, 52]], C.negro, 1.4, azar);
+    punto(ctx, 40, 42, C.negro, 3);
+    punto(ctx, 56, 42, C.negro, 3);
+    circulo(ctx, 48, 56, 3.5, C.negro);
+    trazo(ctx, [[44, 61], [48, 64], [52, 61]], C.negro, 1.2, azar);
+  };
+
+  var cCerdo = function (ctx, azar) {
+    relleno(ctx, [[24, 30], [36, 20], [40, 30]], C.rosa);
+    relleno(ctx, [[56, 30], [60, 20], [72, 30]], C.rosa);
+    circulo(ctx, 48, 46, 23, C.rosa);
+    aro(ctx, 48, 46, 23, C.negro, 2, azar);
+    ctx.fillStyle = "#e88aa5";
+    ctx.beginPath();
+    ctx.ellipse(48, 58, 10, 7, 0, 0, Math.PI * 2);
+    ctx.fill();
+    aro(ctx, 48, 58, 10, C.negro, 1.4, azar);
+    punto(ctx, 44, 58, C.negro, 3);
+    punto(ctx, 52, 58, C.negro, 3);
+    punto(ctx, 40, 40, C.negro, 3);
+    punto(ctx, 56, 40, C.negro, 3);
+  };
+
+  var cGallina = function (ctx, azar) {
+    circulo(ctx, 48, 46, 21, C.blanco);
+    aro(ctx, 48, 46, 21, C.negro, 2, azar);
+    relleno(ctx, [[40, 28], [44, 18], [48, 28]], C.rojo);
+    relleno(ctx, [[48, 28], [52, 18], [56, 28]], C.rojo);
+    relleno(ctx, [[58, 52], [66, 56], [58, 60]], C.naranja);
+    punto(ctx, 40, 44, C.negro, 3);
+    punto(ctx, 56, 44, C.negro, 3);
+    relleno(ctx, [[44, 66], [52, 66], [48, 74]], C.rojo);
+    trazo(ctx, [[30, 30], [26, 22]], C.negro, 1.4, azar);
+  };
+
+  var cPato = function (ctx, azar) {
+    circulo(ctx, 48, 46, 21, C.amarillo);
+    aro(ctx, 48, 46, 21, C.negro, 2, azar);
+    ctx.fillStyle = C.naranja;
+    ctx.beginPath();
+    ctx.ellipse(48, 60, 12, 6, 0, 0, Math.PI * 2);
+    ctx.fill();
+    trazo(ctx, [[36, 60], [60, 60]], C.negro, 1.3, azar);
+    punto(ctx, 40, 40, C.negro, 3);
+    punto(ctx, 56, 40, C.negro, 3);
+  };
+
+  var cRaton = function (ctx, azar) {
+    circulo(ctx, 26, 26, 11, C.gris);
+    circulo(ctx, 70, 26, 11, C.gris);
+    aro(ctx, 26, 26, 11, C.negro, 1.6, azar);
+    aro(ctx, 70, 26, 11, C.negro, 1.6, azar);
+    circulo(ctx, 26, 26, 5, C.rosa);
+    circulo(ctx, 70, 26, 5, C.rosa);
+    circulo(ctx, 48, 50, 20, C.gris);
+    aro(ctx, 48, 50, 20, C.negro, 2, azar);
+    punto(ctx, 40, 46, C.negro, 3);
+    punto(ctx, 56, 46, C.negro, 3);
+    circulo(ctx, 48, 58, 3, C.rosa);
+    trazo(ctx, [[28, 54], [16, 52]], C.negro, 1, azar);
+    trazo(ctx, [[28, 58], [16, 60]], C.negro, 1, azar);
+    trazo(ctx, [[68, 54], [80, 52]], C.negro, 1, azar);
+    trazo(ctx, [[68, 58], [80, 60]], C.negro, 1, azar);
+  };
+
+  var cErizo = function (ctx, azar) {
+    for (var i = 0; i < 14; i++) {
+      var a = Math.PI + (i / 13) * Math.PI;
+      var x = 48 + Math.cos(a) * 22;
+      var y = 52 + Math.sin(a) * 20;
+      trazo(ctx, [[x, y], [x + Math.cos(a) * 8, y + Math.sin(a) * 8]], "#6a4a2a", 2, azar);
+    }
+    circulo(ctx, 48, 54, 20, "#b98a5a");
+    aro(ctx, 48, 54, 20, C.negro, 2, azar);
+    punto(ctx, 42, 50, C.negro, 3);
+    punto(ctx, 54, 50, C.negro, 3);
+    circulo(ctx, 48, 60, 3, C.negro);
+  };
+
+  var cSerpiente = function (ctx, azar) {
+    relleno(ctx, [[30, 40], [30, 26], [42, 20], [58, 22], [70, 32], [72, 46], [64, 56], [52, 60], [40, 56], [34, 48]], C.verde);
+    trazo(ctx, [[30, 40], [30, 26], [42, 20], [58, 22], [70, 32], [72, 46], [64, 56], [52, 60], [40, 56], [34, 48], [30, 40]], C.negro, 2, azar);
+    circulo(ctx, 42, 34, 4, C.blanco);
+    circulo(ctx, 58, 34, 4, C.blanco);
+    punto(ctx, 42, 34, C.negro, 3);
+    punto(ctx, 58, 34, C.negro, 3);
+    trazo(ctx, [[48, 58], [48, 68], [42, 72]], C.rojo, 2, azar);
+  };
+
+  var cTiburon = function (ctx, azar) {
+    relleno(ctx, [[22, 62], [30, 34], [50, 26], [70, 34], [76, 54], [64, 70], [36, 72]], "#7fa8c9");
+    trazo(ctx, [[22, 62], [30, 34], [50, 26], [70, 34], [76, 54], [64, 70], [36, 72], [22, 62]], C.negro, 2, azar);
+    relleno(ctx, [[58, 40], [76, 46], [60, 50]], "#7fa8c9");
+    circulo(ctx, 40, 44, 3.5, C.blanco);
+    punto(ctx, 40, 44, C.negro, 3);
+    for (var d = 0; d < 4; d++) {
+      relleno(ctx, [[34 + d * 8, 66], [38 + d * 8, 66], [36 + d * 8, 71]], C.blanco);
+    }
+    for (var g = 0; g < 3; g++) {
+      trazo(ctx, [[52 + g * 4, 56], [52 + g * 4, 62]], C.negro, 1, azar);
+    }
+  };
+
+  var cMedusa = function (ctx, azar) {
+    ctx.fillStyle = C.morado;
+    ctx.beginPath();
+    ctx.arc(48, 48, 22, Math.PI, 0);
+    ctx.closePath();
+    ctx.fill();
+    aro(ctx, 48, 48, 22, C.negro, 2, azar);
+    trazo(ctx, [[26, 48], [70, 48]], C.negro, 1.6, azar);
+    circulo(ctx, 40, 42, 4, C.blanco);
+    circulo(ctx, 56, 42, 4, C.blanco);
+    punto(ctx, 40, 42, C.negro, 3);
+    punto(ctx, 56, 42, C.negro, 3);
+    for (var t = 0; t < 5; t++) {
+      trazo(ctx, [[30 + t * 9, 64], [28 + t * 9, 74], [32 + t * 9, 82]], C.morado, 2.4, azar);
+    }
+  };
+
+  var cuerpoPez = function (ctx, azar) {
+    ctx.fillStyle = C.naranja;
+    ctx.beginPath();
+    ctx.ellipse(48, 78, 24, 14, 0, 0, Math.PI * 2);
+    ctx.fill();
+    aro(ctx, 48, 78, 24, C.negro, 2, azar);
+    relleno(ctx, [[70, 78], [86, 64], [86, 92]], C.rojo);
+    for (var i = 0; i < 3; i++) {
+      trazo(ctx, [[34 + i * 10, 68], [38 + i * 10, 78], [34 + i * 10, 88]], C.negro, 1, azar);
+    }
+  };
+
+  var cuerpoSerpiente = function (ctx, azar) {
+    trazo(ctx, [[24, 108], [34, 92], [50, 104], [66, 90], [74, 104], [62, 112]], C.verde, 7, azar);
+    circulo(ctx, 24, 108, 5, C.verde);
+  };
+
+  var cuerpoTren = function (ctx, azar) {
+    relleno(ctx, [[22, 64], [74, 64], [74, 92], [22, 92]], C.azul, azar);
+    trazo(ctx, [[22, 64], [74, 64], [74, 92], [22, 92], [22, 64]], C.negro, 2, azar);
+    relleno(ctx, [[58, 50], [70, 50], [70, 64], [58, 64]], C.negro);
+    circulo(ctx, 32, 96, 8, C.negro);
+    circulo(ctx, 32, 96, 3.5, C.gris);
+    circulo(ctx, 62, 96, 8, C.negro);
+    circulo(ctx, 62, 96, 3.5, C.gris);
+    trazo(ctx, [[40, 72], [56, 72]], C.celeste, 2, azar);
+  };
+
+  var cuerpoBarco = function (ctx, azar) {
+    relleno(ctx, [[18, 80], [78, 80], [66, 104], [30, 104]], C.marron, azar);
+    trazo(ctx, [[18, 80], [78, 80], [66, 104], [30, 104], [18, 80]], C.negro, 2, azar);
+    trazo(ctx, [[48, 80], [48, 46]], C.marron, 3, azar);
+    relleno(ctx, [[48, 48], [48, 72], [26, 66]], C.blanco);
+    trazo(ctx, [[48, 48], [48, 72], [26, 66], [48, 48]], C.negro, 1.4, azar);
+  };
+
+  var cuerpoOlla = function (ctx, azar) {
+    relleno(ctx, [[20, 68], [76, 68], [72, 104], [24, 104]], C.gris, azar);
+    trazo(ctx, [[20, 68], [76, 68], [72, 104], [24, 104], [20, 68]], C.negro, 2, azar);
+    trazo(ctx, [[20, 74], [12, 74]], C.negro, 3, azar);
+    trazo(ctx, [[76, 74], [84, 74]], C.negro, 3, azar);
+    relleno(ctx, [[42, 62], [54, 62], [56, 70], [40, 70]], C.gris);
+    circulo(ctx, 48, 58, 4, C.negro);
+  };
+
+  var cuerpoCactus = function (ctx, azar) {
+    relleno(ctx, [[34, 92], [62, 92], [58, 108], [38, 108]], C.marron, azar);
+    trazo(ctx, [[34, 92], [62, 92]], C.negro, 2, azar);
+    relleno(ctx, [[42, 48], [54, 48], [54, 94], [42, 94]], C.verde, azar);
+    relleno(ctx, [[28, 58], [42, 58], [42, 66], [28, 66]], C.verde);
+    relleno(ctx, [[54, 50], [68, 50], [68, 58], [54, 58]], C.verde);
+    trazo(ctx, [[42, 48], [54, 48], [54, 94], [42, 94], [42, 48]], C.negro, 1.6, azar);
+    for (var e = 0; e < 5; e++) {
+      punto(ctx, 44 + (e % 2) * 8, 54 + e * 8, C.amarillo, 2);
+    }
+  };
+
   var FONDOS = [fEspacio, fPradera, fMar, fCiudad, fLluvia, fNoche, fNieve, fDesierto, fSelva, fCirco, fPlaya, fParque, fCole, fCueva];
 
   var FONDOS_CLAVES = [
@@ -1524,7 +1836,7 @@
     trazo(ctx, [[42, 56], [48, 59], [54, 56]], C.negro, 1.4, azar);
   };
 
-  var CABEZAS = [cGato, cPerro, cRobot, cDino, cUnicornio, cPanda, cAlien, cMonstruo, cSol, cElefante, cRana, cLeon, cBuho, cConejo, cPinguino, cNiña, cNiño, cPrincesa, cPirata, cBruja, cFantasma, cDragon, cVaca, cZorro, cSuper];
+  var CABEZAS = [cGato, cPerro, cRobot, cDino, cUnicornio, cPanda, cAlien, cMonstruo, cSol, cElefante, cRana, cLeon, cBuho, cConejo, cPinguino, cNiña, cNiño, cPrincesa, cPirata, cBruja, cFantasma, cDragon, cVaca, cZorro, cSuper, cLobo, cOso, cCerdo, cGallina, cPato, cRaton, cErizo, cSerpiente, cTiburon, cMedusa];
   var cuerpoCasa = function (ctx, azar) {
     relleno(ctx, [[24, 64], [72, 64], [72, 106], [24, 106]], C.amarillo, azar);
     trazo(ctx, [[24, 64], [72, 64], [72, 106], [24, 106], [24, 64]], C.negro, 2, azar);
@@ -1571,7 +1883,7 @@
     }
   };
 
-  var CUERPOS = [cuerpoPatas, cuerpoTentaculos, cuerpoCohete, cuerpoCaparazon, cuerpoVestido, cuerpoRuedas, cuerpoGlobo, cuerpoAraña, cuerpoNube, cuerpoCapa, cuerpoCasa, cuerpoArbol, cuerpoCoche, cuerpoTarta];
+  var CUERPOS = [cuerpoPatas, cuerpoTentaculos, cuerpoCohete, cuerpoCaparazon, cuerpoVestido, cuerpoRuedas, cuerpoGlobo, cuerpoAraña, cuerpoNube, cuerpoCapa, cuerpoCasa, cuerpoArbol, cuerpoCoche, cuerpoTarta, cuerpoPez, cuerpoSerpiente, cuerpoTren, cuerpoBarco, cuerpoOlla, cuerpoCactus];
 
   var dCoche = function (ctx, azar) {
     circulo(ctx, 14, 16, 6, C.amarillo);
@@ -1928,7 +2240,7 @@
 
   var trazoBoli = function (ctx, puntos, azar, ancho) {
     ctx.strokeStyle = TINTA;
-    ctx.lineWidth = ancho || 1.3;
+    ctx.lineWidth = (ancho || 1.3) * perfilActual.ancho;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.globalAlpha = 0.92;
@@ -1943,7 +2255,7 @@
       var pasos = Math.max(1, Math.round(largo / 4));
       for (var p = 0; p <= pasos; p++) {
         var t = p / pasos;
-        var desvio = p > 0 && p < pasos ? 1.1 : 0;
+        var desvio = p > 0 && p < pasos ? 1.1 * perfilActual.jitter : 0;
         var x = a[0] + dx * t + (azar() - 0.5) * desvio;
         var y = a[1] + dy * t + (azar() - 0.5) * desvio;
         if (primero) {
@@ -2436,6 +2748,10 @@
   };
 
   var pintarBoli = function (registro, azar, lienzo, ctx, secreto) {
+    var CW = lienzo.width;
+    var CH = lienzo.height;
+    L = CW;
+    A = CH;
     papelBoli(ctx, azar);
     var perdido = azar() < 0.05;
     if (perdido) {
@@ -2446,10 +2762,21 @@
       }
       return { lienzo: lienzo, perdido: true, secreto: null };
     }
+    var esc = Math.min(CW / 96, CH / 120);
+    var dx = (CW - 96 * esc) / 2;
+    var dy = (CH - 120 * esc) / 2;
+    L = 96;
+    A = 120;
+    ctx.save();
+    ctx.translate(dx, dy);
+    ctx.scale(esc, esc);
     dibujarAdulto(ctx, azar, registro);
     if (secreto) {
       secreto.sello(ctx);
     }
+    ctx.restore();
+    L = CW;
+    A = CH;
     var nivel = Math.min(2, (registro.n || 0) + (azar() < 0.25 ? 1 : 0));
     if (secreto) {
       nivel = 2;
@@ -2490,7 +2817,7 @@
     { f: dTortuga, titulo: "tortuga lenta", claves: ["tortuga"], parte: { cuerpo: cuerpoCaparazon } },
     { f: dCaracol, titulo: "caracol con baba", claves: ["caracol", "baba"] },
     { f: dHelado, titulo: "helado de 4 bolas", claves: ["helado", "cucurucho", "polo"] },
-    { f: dPanda, titulo: "panda comiend0", claves: ["panda", "oso"], parte: { cabeza: cPanda } },
+    { f: dPanda, titulo: "panda comiend0", claves: ["panda"], parte: { cabeza: cPanda } },
     { f: dOvni, titulo: "platillo volante", claves: ["ovni", "platillo", "alien", "extraterrestre"], parte: { cabeza: cAlien } },
     { f: dCorazon, titulo: "te kiero TKM", claves: ["corazon", "amor", "kiero"] },
     { f: dSol, titulo: "el sol tiene cara", claves: ["sol"], parte: { cabeza: cSol } },
@@ -2522,7 +2849,17 @@
     { f: dAvion, titulo: "avión", claves: ["avion", "avioneta"] },
     { f: dCometa, titulo: "cometa", claves: ["cometa", "papalote", "barrilete"] },
     { f: dGloboA, titulo: "globo aerostático", claves: ["aerostatico", "aerostato"] },
-    { f: dVolcan, titulo: "volcán", claves: ["volcan"] }
+    { f: dVolcan, titulo: "volcán", claves: ["volcan"] },
+    { f: conCabeza(cLobo), titulo: "lobo", claves: ["lobo"], parte: { cabeza: cLobo } },
+    { f: conCabeza(cOso), titulo: "oso", claves: ["oso"], parte: { cabeza: cOso } },
+    { f: conCabeza(cCerdo), titulo: "cerdito", claves: ["cerdo", "cerdito", "cochino"], parte: { cabeza: cCerdo } },
+    { f: conCabeza(cGallina), titulo: "gallina", claves: ["gallina", "pollo"], parte: { cabeza: cGallina } },
+    { f: conCabeza(cPato), titulo: "pato", claves: ["pato", "pata"], parte: { cabeza: cPato } },
+    { f: conCabeza(cRaton), titulo: "ratón", claves: ["raton", "ratoncito"], parte: { cabeza: cRaton } },
+    { f: conCabeza(cErizo), titulo: "erizo", claves: ["erizo"], parte: { cabeza: cErizo } },
+    { f: conCabeza(cSerpiente), titulo: "serpiente", claves: ["serpiente", "culebra"], parte: { cabeza: cSerpiente } },
+    { f: conCabeza(cTiburon), titulo: "tiburón", claves: ["tiburon"], parte: { cabeza: cTiburon } },
+    { f: conCabeza(cMedusa), titulo: "medusa", claves: ["medusa"], parte: { cabeza: cMedusa } }
   ];
 
   var aGlobo = function (ctx, azar) {
@@ -2975,8 +3312,201 @@
     return hallados;
   };
 
+  var medidasDe = function (registro) {
+    var f = hash((registro.s || "") + "|formato") % 10;
+    if (f >= 9) {
+      return { w: 96, h: 96 };
+    }
+    if (f >= 7) {
+      return { w: 120, h: 96 };
+    }
+    return { w: 96, h: 120 };
+  };
+
+  var temporadaActual = function () {
+    var hoy = new Date();
+    var mes = hoy.getMonth() + 1;
+    var dia = hoy.getDate();
+    if ((mes === 10 && dia >= 20) || (mes === 11 && dia <= 2)) {
+      return "halloween";
+    }
+    if ((mes === 12 && dia >= 10) || (mes === 1 && dia <= 6)) {
+      return "navidad";
+    }
+    if (mes === 9) {
+      return "cole";
+    }
+    if (mes >= 6 && mes <= 8) {
+      return "playa";
+    }
+    return null;
+  };
+
+  var escenaCumple = function (ctx, azar) {
+    var colores = [C.rojo, C.amarillo, C.verde, C.azul, C.morado];
+    for (var i = 0; i < 18; i++) {
+      ctx.fillStyle = colores[Math.floor(azar() * colores.length)];
+      ctx.fillRect(azar() * 96, azar() * 84, 2, 2);
+    }
+    aGlobo(ctx, azar);
+    aGlobo(ctx, azar);
+    dTarta(ctx, azar);
+    circulo(ctx, 16, 20, 5, C.rojo);
+    circulo(ctx, 82, 30, 4, C.azul);
+  };
+
+  var escenaPlaya = function (ctx, azar) {
+    fPlaya(ctx, azar);
+    relleno(ctx, [[36, 104], [36, 86], [44, 86], [44, 78], [54, 78], [54, 86], [62, 86], [62, 104]], "#e0c37a", azar);
+    trazo(ctx, [[32, 104], [66, 104]], C.negro, 1.6, azar);
+    trazo(ctx, [[40, 86], [40, 78], [48, 74], [56, 78], [56, 86]], C.negro, 1.3, azar);
+    circulo(ctx, 80, 100, 5, C.rojo);
+    trazo(ctx, [[75, 97], [85, 103]], C.negro, 1, azar);
+  };
+
+  var escenaEspacio = function (ctx, azar) {
+    fEspacio(ctx, azar);
+    ctx.save();
+    ctx.translate(62, 72);
+    ctx.scale(0.55, 0.55);
+    ctx.translate(-48, -60);
+    dCohete(ctx, azar);
+    ctx.restore();
+    ctx.save();
+    ctx.translate(26, 92);
+    ctx.scale(0.5, 0.5);
+    ctx.translate(-48, -60);
+    dOvni(ctx, azar);
+    ctx.restore();
+  };
+
+  var escenaCole = function (ctx, azar) {
+    fCole(ctx, azar);
+    relleno(ctx, [[28, 96], [70, 96], [70, 100], [28, 100]], C.marron, azar);
+    trazo(ctx, [[32, 96], [32, 82]], C.marron, 2, azar);
+    trazo(ctx, [[66, 96], [66, 82]], C.marron, 2, azar);
+    relleno(ctx, [[42, 84], [58, 84], [58, 94], [42, 94]], C.amarillo, azar);
+    trazo(ctx, [[42, 84], [58, 84], [58, 94], [42, 94], [42, 84]], C.negro, 1.4, azar);
+    var lapices = [C.rojo, C.azul, C.verde, C.amarillo];
+    for (var i = 0; i < 4; i++) {
+      var x = 22 + i * 7;
+      trazo(ctx, [[x, 114], [x + 2, 106]], lapices[i], 2, azar);
+    }
+  };
+
+  var escenaHalloween = function (ctx, azar) {
+    estrellitas(ctx, azar, 7);
+    aro(ctx, 78, 22, 9, C.amarillo, 1.6, azar);
+    ctx.fillStyle = C.naranja;
+    ctx.beginPath();
+    ctx.ellipse(44, 78, 20, 17, 0, 0, Math.PI * 2);
+    ctx.fill();
+    trazo(ctx, [[44, 61], [40, 52]], C.verde, 2.4, azar);
+    aro(ctx, 44, 78, 20, C.negro, 1.8, azar);
+    trazo(ctx, [[28, 78], [34, 78]], C.negro, 2, azar);
+    trazo(ctx, [[54, 78], [60, 78]], C.negro, 2, azar);
+    relleno(ctx, [[36, 86], [52, 86], [48, 92], [40, 92]], C.negro);
+    ctx.save();
+    ctx.translate(78, 94);
+    ctx.scale(0.45, 0.45);
+    ctx.translate(-48, -40);
+    cFantasma(ctx, azar);
+    ctx.restore();
+  };
+
+  var escenaNavidad = function (ctx, azar) {
+    for (var i = 0; i < 22; i++) {
+      circulo(ctx, azar() * 96, azar() * 120, 1 + azar(), "#ffffff");
+    }
+    relleno(ctx, [[48, 22], [30, 52], [66, 52]], C.verde);
+    relleno(ctx, [[48, 40], [24, 76], [72, 76]], C.verde);
+    relleno(ctx, [[48, 58], [18, 98], [78, 98]], C.verde);
+    trazo(ctx, [[44, 98], [44, 108], [52, 108], [52, 98]], C.marron, 2, azar);
+    var bolas = [C.rojo, C.amarillo, C.azul];
+    for (var d = 0; d < 8; d++) {
+      circulo(ctx, 28 + azar() * 40, 34 + azar() * 58, 2, bolas[Math.floor(azar() * 3)]);
+    }
+    circulo(ctx, 48, 18, 4, C.amarillo);
+    relleno(ctx, [[8, 100], [30, 100], [30, 116], [8, 116]], C.rojo);
+    trazo(ctx, [[19, 100], [19, 116]], C.amarillo, 1.6, azar);
+    trazo(ctx, [[8, 108], [30, 108]], C.amarillo, 1.6, azar);
+    relleno(ctx, [[64, 104], [84, 104], [84, 116], [64, 116]], C.azul);
+    trazo(ctx, [[74, 104], [74, 116]], C.blanco, 1.6, azar);
+  };
+
+  var ESCENAS = [
+    { clave: "cumple", f: escenaCumple, claves: ["cumple", "cumpleanos", "tarta de cumple"] },
+    { clave: "playa", f: escenaPlaya, claves: ["playa", "verano", "vacaciones"] },
+    { clave: "espacio", f: escenaEspacio, claves: ["espacio", "galaxia", "cosmos"] },
+    { clave: "cole", f: escenaCole, claves: ["colegio", "cole", "clase", "pizarra"] },
+    { clave: "halloween", f: escenaHalloween, claves: ["halloween", "calabaza", "terror"] },
+    { clave: "navidad", f: escenaNavidad, claves: ["navidad", "papa noel", "arbol de navidad", "regalos"] }
+  ];
+
+  var buscarEscena = function (texto) {
+    var t = normalizar(texto);
+    for (var i = 0; i < ESCENAS.length; i++) {
+      for (var c = 0; c < ESCENAS[i].claves.length; c++) {
+        if (t.indexOf(normalizar(ESCENAS[i].claves[c])) !== -1) {
+          return ESCENAS[i];
+        }
+      }
+    }
+    return null;
+  };
+
+  var escenaDe = function (clave) {
+    for (var i = 0; i < ESCENAS.length; i++) {
+      if (ESCENAS[i].clave === clave) {
+        return ESCENAS[i];
+      }
+    }
+    return null;
+  };
+
+  var dibujarMezcla = function (ctx, azar, registro) {
+    var mitad = 48;
+    ctx.save();
+    poligono(ctx, [[mitad, 0], [96, 0], [96, 120], [mitad, 120]]);
+    ctx.clip();
+    ctx.fillStyle = "#f8f8f4";
+    ctx.fillRect(mitad, 0, 96 - mitad, 120);
+    ctx.strokeStyle = "rgba(120,150,210,0.55)";
+    ctx.lineWidth = 0.8;
+    for (var y = 10; y < 120; y += 8) {
+      ctx.beginPath();
+      ctx.moveTo(mitad, y);
+      ctx.lineTo(96, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+    var onda = [];
+    for (var oy = 0; oy <= 120; oy += 8) {
+      onda.push([mitad + Math.sin(oy / 14) * 3, oy]);
+    }
+    trazoBoli(ctx, onda, azar, 1.2);
+    var nino = buscarCoincidencias(registro.p, CATALOGO)[0] || CATALOGO[Math.floor(azar() * CATALOGO.length)];
+    ctx.save();
+    ctx.translate(24, 60);
+    ctx.scale(0.66, 0.66);
+    ctx.translate(-48, -60);
+    nino.f(ctx, azar);
+    ctx.restore();
+    var boli = buscarCoincidencias(registro.p, CATALOGO_BOLI)[0] || CATALOGO_BOLI[Math.floor(azar() * CATALOGO_BOLI.length)];
+    ctx.save();
+    ctx.translate(72, 60);
+    ctx.scale(0.66, 0.66);
+    ctx.translate(-48, -60);
+    boli.f(ctx, azar);
+    ctx.restore();
+  };
+
   var pintarDibujo = function (registro) {
+    var med = medidasDe(registro);
+    L = med.w;
+    A = med.h;
     var azar = sorteador(hash(registro.s));
+    perfilActual = PERFILES[Math.floor(azar() * PERFILES.length)];
     var lienzo = document.createElement("canvas");
     lienzo.width = L;
     lienzo.height = A;
@@ -2994,13 +3524,14 @@
         ctx.fillStyle = dado < 0.45 ? "#0b0b12" : (dado < 0.72 ? "#00ffe1" : "#ff2bd1");
         ctx.fillRect(Math.floor(azar() * L), Math.floor(azar() * A), 1, 1);
       }
-      return { lienzo: lienzo, perdido: true };
+      return { lienzo: lienzo, perdido: true, secreto: null };
     }
-    var secreto = buscarSecreto(registro.p);
     var fondoForzado = buscarCoincidencias(registro.p, FONDOS_CLAVES)[0];
     var sujetos = buscarCoincidencias(registro.p, CATALOGO);
     var texto = normalizar(registro.p);
-    var esQuimera = texto.indexOf("quimera") !== -1 || texto.indexOf("mezcla") !== -1 || texto.indexOf("experimento") !== -1;
+    var esMezcla = texto.indexOf("mezcla") !== -1;
+    var esQuimera = texto.indexOf("quimera") !== -1 || texto.indexOf("experimento") !== -1;
+    var escena = buscarEscena(registro.p) || escenaDe(registro.e);
     var partes = {};
     sujetos.forEach(function (entrada) {
       if (entrada.parte) {
@@ -3013,7 +3544,21 @@
       }
     });
     var hacerQuimera = esQuimera || (sujetos.length > 1 && (partes.cabeza || partes.cuerpo)) || (!sujetos.length && azar() < 0.18);
-    if (hacerQuimera) {
+    var CW = L;
+    var CH = A;
+    var esc = Math.min(CW / 96, CH / 120);
+    var dx = (CW - 96 * esc) / 2;
+    var dy = (CH - 120 * esc) / 2;
+    L = 96;
+    A = 120;
+    ctx.save();
+    ctx.translate(dx, dy);
+    ctx.scale(esc, esc);
+    if (esMezcla) {
+      dibujarMezcla(ctx, azar, registro);
+    } else if (escena) {
+      escena.f(ctx, azar);
+    } else if (hacerQuimera) {
       if (fondoForzado) {
         partes.fondo = fondoForzado.f;
       }
@@ -3030,8 +3575,8 @@
       sujetos[0].f(ctx, azar);
       if (sujetos.length > 1) {
         var mini = document.createElement("canvas");
-        mini.width = L;
-        mini.height = A;
+        mini.width = 96;
+        mini.height = 120;
         var ctxMini = mini.getContext("2d");
         papel(ctxMini, azar);
         sujetos[1].f(ctxMini, azar);
@@ -3040,16 +3585,21 @@
         ctx.drawImage(mini, 62, 78, 30, 36);
       }
     }
-    var accesoriosEncontrados = buscarCoincidencias(registro.p, ACCESORIOS);
-    if (!accesoriosEncontrados.length && azar() < 0.35) {
-      accesoriosEncontrados = [ACCESORIOS[Math.floor(azar() * ACCESORIOS.length)]];
+    if (!esMezcla && !escena) {
+      var accesoriosEncontrados = buscarCoincidencias(registro.p, ACCESORIOS);
+      if (!accesoriosEncontrados.length && azar() < 0.35) {
+        accesoriosEncontrados = [ACCESORIOS[Math.floor(azar() * ACCESORIOS.length)]];
+      }
+      accesoriosEncontrados.forEach(function (accesorio) {
+        accesorio.f(ctx, azar);
+      });
     }
-    accesoriosEncontrados.forEach(function (accesorio) {
-      accesorio.f(ctx, azar);
-    });
     if (secreto) {
       secreto.sello(ctx);
     }
+    ctx.restore();
+    L = CW;
+    A = CH;
     rotular(ctx, registro.p, azar);
     if (!modoLimpio) {
       clima(ctx, azar);
@@ -3173,8 +3723,9 @@
     }
     figura.style.transform = "rotate(" + giro.toFixed(2) + "deg)";
     var lienzo = document.createElement("canvas");
-    lienzo.width = L;
-    lienzo.height = A;
+    var med = medidasDe(registro);
+    lienzo.width = med.w;
+    lienzo.height = med.h;
     lienzo.setAttribute("aria-label", registro.p);
     figura.appendChild(lienzo);
     var acciones = document.createElement("div");
@@ -3279,11 +3830,14 @@
     }
     paredCompartida = false;
     var secreto = buscarSecreto(prompt);
+    var temporada = temporadaActual();
+    var escenaTemp = temporada && Math.random() < 0.35 ? temporada : null;
     registros.unshift({
       p: prompt.slice(0, 60),
       s: nuevaSemilla(prompt),
       n: secreto ? 2 : nivelBase,
       m: modoActual,
+      e: escenaTemp,
       f: new Date().toLocaleString("es-ES")
     });
     contadorGeneraciones += 1;
@@ -3328,6 +3882,7 @@
       n: registro.n || nivelBase,
       g: (registro.g || 0) + 1,
       m: registro.m || "n",
+      e: registro.e || null,
       padre: { p: registro.p, s: registro.s, g: registro.g || 0 },
       f: new Date().toLocaleString("es-ES")
     });
@@ -3415,7 +3970,8 @@
       titulo: $("[data-editor-titulo]", capa),
       registro: null,
       trazos: [],
-      color: COLORES_PINTURA[0]
+      color: COLORES_PINTURA[0],
+      med: { w: 96, h: 120 }
     };
 
     COLORES_PINTURA.forEach(function (color) {
@@ -3448,9 +4004,11 @@
 
     var coordenadas = function (evento) {
       var caja = lienzoEditor.getBoundingClientRect();
-      var x = Math.floor(((evento.clientX - caja.left) / caja.width) * L);
-      var y = Math.floor(((evento.clientY - caja.top) / caja.height) * A);
-      return [Math.max(0, Math.min(L - 1, x)), Math.max(0, Math.min(A - 1, y))];
+      var anchoMed = estado.med.w;
+      var altoMed = estado.med.h;
+      var x = Math.floor(((evento.clientX - caja.left) / caja.width) * anchoMed);
+      var y = Math.floor(((evento.clientY - caja.top) / caja.height) * altoMed);
+      return [Math.max(0, Math.min(anchoMed - 1, x)), Math.max(0, Math.min(altoMed - 1, y))];
     };
 
     var trazoActual = null;
@@ -3516,6 +4074,9 @@
     editor.trazos = (registro.t || []).map(function (capaTrazo) {
       return { c: capaTrazo.c, p: capaTrazo.p.slice() };
     });
+    editor.med = medidasDe(registro);
+    editor.lienzo.width = editor.med.w * 4;
+    editor.lienzo.height = editor.med.h * 4;
     editor.color = COLORES_PINTURA[0];
     editor.titulo.textContent = registro.p;
     editor.pintar();
@@ -3570,6 +4131,7 @@
         item.push(null);
       }
       item.push(registro.m || "n");
+      item.push(registro.e || null);
       return item;
     });
   };
@@ -3590,6 +4152,7 @@
           n: item[2] || 0,
           g: item[3] || 0,
           m: item[6] === "a" ? "a" : "n",
+          e: typeof item[7] === "string" ? item[7] : null,
           f: ""
         };
         if (Array.isArray(item[4])) {
@@ -3711,11 +4274,12 @@
     }
     forzarRenderTodo();
     var cols = 6;
+    var hueco = 132;
     var separacion = 10;
     var alturaPie = 18;
     var filas = Math.ceil(registros.length / cols);
-    var ancho = cols * (L + separacion) + separacion;
-    var alto = filas * (A + alturaPie + separacion) + separacion + 26;
+    var ancho = cols * (hueco + separacion) + separacion;
+    var alto = filas * (hueco + alturaPie + separacion) + separacion + 26;
     var salida = document.createElement("canvas");
     salida.width = ancho;
     salida.height = alto;
@@ -3729,8 +4293,8 @@
     lienzos.forEach(function (lienzo, i) {
       var cx = i % cols;
       var cy = Math.floor(i / cols);
-      var x = separacion + cx * (L + separacion);
-      var y = 26 + separacion + cy * (A + alturaPie + separacion);
+      var x = separacion + cx * (hueco + separacion) + Math.round((hueco - lienzo.width) / 2);
+      var y = 26 + separacion + cy * (hueco + alturaPie + separacion) + Math.round((hueco - lienzo.height) / 2);
       ctxSalida.drawImage(lienzo, x, y);
       ctxSalida.fillStyle = "#d8d8ea";
       ctxSalida.font = "12px \"Schoolbell\", cursive";
@@ -3738,7 +4302,7 @@
       if (titulo.length > 16) {
         titulo = titulo.slice(0, 15) + "…";
       }
-      ctxSalida.fillText(titulo, x, y + A + 13);
+      ctxSalida.fillText(titulo, separacion + cx * (hueco + separacion), y + lienzo.height + 13);
     });
     var enlace = document.createElement("a");
     enlace.download = "pared-de-dibujos.png";
@@ -3766,7 +4330,7 @@
       return;
     }
     var ctx = lienzo.getContext("2d");
-    ctx.clearRect(0, 0, L, A);
+    ctx.clearRect(0, 0, lienzo.width, lienzo.height);
     ctx.drawImage(resultado.lienzo, 0, 0);
     figura.setAttribute("data-render", "1");
     figura.__resultado = resultado;
@@ -3853,22 +4417,24 @@
       return;
     }
     var azar = sorteador(hash(clave + "hervor"));
+    var anchoBase = base.lienzo.width;
+    var altoBase = base.lienzo.height;
     var cuadros = [];
     for (var c = 0; c < 3; c++) {
       var cuadro = document.createElement("canvas");
-      cuadro.width = L;
-      cuadro.height = A;
+      cuadro.width = anchoBase;
+      cuadro.height = altoBase;
       var ctxCuadro = cuadro.getContext("2d");
       var bandas = 4 + Math.floor(azar() * 3);
       var corte = 0;
-      for (var b = 0; b < bandas && corte < A; b++) {
+      for (var b = 0; b < bandas && corte < altoBase; b++) {
         var alto = 8 + Math.floor(azar() * 18);
         var desvio = Math.floor(azar() * 3) - 1;
-        ctxCuadro.drawImage(base.lienzo, 0, corte, L, alto, desvio, corte, L, alto);
+        ctxCuadro.drawImage(base.lienzo, 0, corte, anchoBase, alto, desvio, corte, anchoBase, alto);
         corte += alto;
       }
-      if (corte < A) {
-        ctxCuadro.drawImage(base.lienzo, 0, corte, L, A - corte, 0, corte, L, A - corte);
+      if (corte < altoBase) {
+        ctxCuadro.drawImage(base.lienzo, 0, corte, anchoBase, altoBase - corte, 0, corte, anchoBase, altoBase - corte);
       }
       cuadros.push(cuadro);
     }
@@ -3876,7 +4442,7 @@
     hervires[clave] = window.setInterval(function () {
       indice = (indice + 1) % cuadros.length;
       var ctx = lienzo.getContext("2d");
-      ctx.clearRect(0, 0, L, A);
+      ctx.clearRect(0, 0, lienzo.width, lienzo.height);
       ctx.drawImage(cuadros[indice], 0, 0);
     }, 260);
   };
@@ -3895,7 +4461,7 @@
     var lienzo = figura.querySelector("canvas");
     if (base && lienzo) {
       var ctx = lienzo.getContext("2d");
-      ctx.clearRect(0, 0, L, A);
+      ctx.clearRect(0, 0, lienzo.width, lienzo.height);
       ctx.drawImage(base.lienzo, 0, 0);
     }
   };
@@ -4024,6 +4590,7 @@
       n: registro.n || 0,
       g: registro.g || 0,
       m: registro.m || "n",
+      e: registro.e || null,
       t: registro.t || null,
       padre: registro.padre || null,
       f: registro.f || ""
@@ -4134,6 +4701,7 @@
         n: padre.n || nivelBase,
         g: (padre.g || 0) + 1,
         m: padre.m || "n",
+        e: padre.e || null,
         padre: { p: padre.p, s: padre.s, g: padre.g || 0 },
         f: new Date().toLocaleString("es-ES")
       };
@@ -4265,6 +4833,9 @@
     }
     zoom.registro = registro;
     zoom.limpio = false;
+    var medZoom = medidasDe(registro);
+    zoom.lienzo.width = medZoom.w * 4;
+    zoom.lienzo.height = medZoom.h * 4;
     pintarZoom();
     zoom.capa.classList.add("abierto");
     zoom.capa.setAttribute("aria-hidden", "false");
