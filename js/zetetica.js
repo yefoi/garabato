@@ -162,56 +162,160 @@
     });
   }
 
-  var lluvia = document.createElement("canvas");
-  lluvia.id = "lluvia";
-  lluvia.setAttribute("aria-hidden", "true");
-  document.body.appendChild(lluvia);
-  var ctxLluvia = lluvia.getContext("2d");
-  var glifos = "01<>[]{}=+*/#@$%&?ABCDEF";
-  var celda = 16;
-  var columnas = 0;
-  var posiciones = [];
+  var lienzoGarabatos = document.createElement("canvas");
+  lienzoGarabatos.id = "garabatos";
+  lienzoGarabatos.setAttribute("aria-hidden", "true");
+  document.body.appendChild(lienzoGarabatos);
+  var ctxGarabatos = lienzoGarabatos.getContext("2d");
+  var garabatosFondo = [];
+  var tiposGarabato = ["espiral", "estrella", "cubo", "corazon", "flecha", "interrogacion", "rayo", "cara", "cuadro", "onda"];
 
-  var ajustarLluvia = function () {
-    lluvia.width = window.innerWidth;
-    lluvia.height = window.innerHeight;
-    columnas = Math.ceil(lluvia.width / celda);
-    posiciones = [];
-    for (var i = 0; i < columnas; i++) {
-      posiciones.push(Math.random() * (lluvia.height / celda));
+  var ajustarGarabatos = function () {
+    lienzoGarabatos.width = window.innerWidth;
+    lienzoGarabatos.height = window.innerHeight;
+    garabatosFondo = [];
+    var cantidad = Math.min(22, Math.max(10, Math.round(window.innerWidth / 90)));
+    for (var i = 0; i < cantidad; i++) {
+      garabatosFondo.push({
+        x: Math.random() * lienzoGarabatos.width,
+        y: Math.random() * lienzoGarabatos.height,
+        tipo: tiposGarabato[Math.floor(Math.random() * tiposGarabato.length)],
+        tam: 8 + Math.random() * 14,
+        vel: 0.12 + Math.random() * 0.3,
+        fase: Math.random() * Math.PI * 2,
+        giro: (Math.random() - 0.5) * 0.004,
+        ang: Math.random() * Math.PI * 2,
+        alfa: 0.15 + Math.random() * 0.2,
+        tono: Math.random()
+      });
     }
   };
-  ajustarLluvia();
-  window.addEventListener("resize", ajustarLluvia);
 
-  var pasoLluvia = function () {
+  var tintaGarabato = function (tono) {
+    if (tono < 0.6) {
+      return "0, 255, 225";
+    }
+    if (tono < 0.85) {
+      return "216, 216, 234";
+    }
+    return "255, 43, 209";
+  };
+
+  var pintarGarabato = function (g) {
+    var ctx = ctxGarabatos;
+    var t = g.tam;
+    ctx.save();
+    ctx.translate(g.x, g.y);
+    ctx.rotate(g.ang);
+    ctx.strokeStyle = "rgba(" + tintaGarabato(g.tono) + ", " + g.alfa + ")";
+    ctx.lineWidth = 1.2;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    var i;
+    var a;
+    if (g.tipo === "espiral") {
+      for (a = 0; a < Math.PI * 5; a += 0.3) {
+        var r = (a / (Math.PI * 5)) * t;
+        if (a === 0) {
+          ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+        } else {
+          ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+      }
+    } else if (g.tipo === "estrella") {
+      for (i = 0; i <= 10; i++) {
+        var rr = i % 2 === 0 ? t : t * 0.42;
+        var aa = -Math.PI / 2 + (i * Math.PI) / 5;
+        if (i === 0) {
+          ctx.moveTo(Math.cos(aa) * rr, Math.sin(aa) * rr);
+        } else {
+          ctx.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr);
+        }
+      }
+    } else if (g.tipo === "cubo") {
+      var s = t * 0.55;
+      ctx.rect(-s, -s, s * 2, s * 2);
+      ctx.moveTo(-s, -s);
+      ctx.lineTo(-s + s * 0.5, -s - s * 0.5);
+      ctx.lineTo(s * 1.5, -s - s * 0.5);
+      ctx.lineTo(s, -s);
+      ctx.moveTo(s, s);
+      ctx.lineTo(s * 1.5, s * 0.5);
+      ctx.lineTo(s * 1.5, -s - s * 0.5);
+    } else if (g.tipo === "corazon") {
+      ctx.moveTo(0, t * 0.7);
+      ctx.bezierCurveTo(-t, -t * 0.2, -t * 0.5, -t * 0.9, 0, -t * 0.3);
+      ctx.bezierCurveTo(t * 0.5, -t * 0.9, t, -t * 0.2, 0, t * 0.7);
+    } else if (g.tipo === "flecha") {
+      ctx.moveTo(-t, t * 0.6);
+      ctx.lineTo(t, -t * 0.6);
+      ctx.moveTo(t, -t * 0.6);
+      ctx.lineTo(t * 0.3, -t * 0.45);
+      ctx.moveTo(t, -t * 0.6);
+      ctx.lineTo(t * 0.75, 0);
+    } else if (g.tipo === "interrogacion") {
+      ctx.arc(0, -t * 0.25, t * 0.35, Math.PI, Math.PI * 1.8);
+      ctx.moveTo(t * 0.26, t * 0.05);
+      ctx.lineTo(0, t * 0.32);
+      ctx.moveTo(0, t * 0.75);
+      ctx.lineTo(0.01, t * 0.78);
+    } else if (g.tipo === "rayo") {
+      ctx.moveTo(t * 0.1, -t);
+      ctx.lineTo(-t * 0.25, -t * 0.1);
+      ctx.lineTo(t * 0.05, -t * 0.05);
+      ctx.lineTo(-t * 0.1, t);
+    } else if (g.tipo === "cara") {
+      ctx.arc(0, 0, t * 0.65, 0, Math.PI * 2);
+      ctx.moveTo(-t * 0.22, -t * 0.12);
+      ctx.lineTo(-t * 0.18, -t * 0.07);
+      ctx.moveTo(t * 0.22, -t * 0.12);
+      ctx.lineTo(t * 0.18, -t * 0.07);
+      ctx.moveTo(-t * 0.28, t * 0.2);
+      ctx.quadraticCurveTo(0, t * 0.45, t * 0.28, t * 0.2);
+    } else if (g.tipo === "cuadro") {
+      ctx.rect(-t * 0.55, -t * 0.55, t * 1.1, t * 1.1);
+      ctx.moveTo(-t * 0.55, -t * 0.55);
+      ctx.lineTo(t * 0.55, t * 0.55);
+      ctx.moveTo(t * 0.55, -t * 0.55);
+      ctx.lineTo(-t * 0.55, t * 0.55);
+    } else {
+      ctx.moveTo(-t, 0);
+      ctx.quadraticCurveTo(-t * 0.5, -t * 0.5, 0, 0);
+      ctx.quadraticCurveTo(t * 0.5, t * 0.5, t, 0);
+    }
+    ctx.stroke();
+    ctx.restore();
+  };
+
+  var pasoGarabatos = function () {
     if (document.hidden || raiz.classList.contains("modo-ligero")) {
       return;
     }
-    if (raiz.getAttribute("data-tema") === "dia") {
-      ctxLluvia.clearRect(0, 0, lluvia.width, lluvia.height);
-      return;
-    }
-    ctxLluvia.globalCompositeOperation = "destination-out";
-    ctxLluvia.fillStyle = "rgba(0, 0, 0, 0.09)";
-    ctxLluvia.fillRect(0, 0, lluvia.width, lluvia.height);
-    ctxLluvia.globalCompositeOperation = "source-over";
-    ctxLluvia.font = celda + "px monospace";
-    for (var i = 0; i < columnas; i++) {
-      var glifo = glifos.charAt(Math.floor(Math.random() * glifos.length));
-      var y = posiciones[i] * celda;
-      var tinta = Math.random();
-      ctxLluvia.fillStyle = tinta < 0.08 ? "#ff2bd1" : (tinta < 0.22 ? "#d8d8ea" : "#00ffe1");
-      ctxLluvia.fillText(glifo, i * celda, y);
-      if (y > lluvia.height && Math.random() > 0.972) {
-        posiciones[i] = 0;
-      } else {
-        posiciones[i] += 1;
+    ctxGarabatos.clearRect(0, 0, lienzoGarabatos.width, lienzoGarabatos.height);
+    var ahora = Date.now() / 1000;
+    garabatosFondo.forEach(function (g) {
+      g.y += g.vel;
+      g.x += Math.sin(ahora * 0.6 + g.fase) * 0.15;
+      g.ang += g.giro;
+      if (g.y - g.tam > lienzoGarabatos.height) {
+        g.y = -g.tam * 2;
+        g.x = Math.random() * lienzoGarabatos.width;
       }
-    }
+      if (g.x < -g.tam * 2) {
+        g.x = lienzoGarabatos.width + g.tam;
+      }
+      if (g.x > lienzoGarabatos.width + g.tam * 2) {
+        g.x = -g.tam;
+      }
+      pintarGarabato(g);
+    });
   };
+
+  ajustarGarabatos();
+  window.addEventListener("resize", ajustarGarabatos);
+  pasoGarabatos();
   if (!reducir) {
-    setInterval(pasoLluvia, 90);
+    setInterval(pasoGarabatos, 120);
   }
 
   var sprites = document.createElement("canvas");
