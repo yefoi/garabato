@@ -2297,3 +2297,36 @@ html.alto-contraste body::after {
 }
 
 #camara.sacudida canvas { animation: sacudida 0.22s steps(2) 1; }
+
+.controles-extra {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 3px dotted var(--linea);
+}
+
+.controles-extra[hidden] {
+  display: none;
+}
+
+.grupo {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.grupo-titulo {
+  margin: 0;
+  font-family: var(--pixel);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  color: var(--texto-2);
+}
+
+.chip.oculta {
+  display: none;
+}
+
+.semillas.abiertas .chip.oculta {
+  display: inline-block;
+}

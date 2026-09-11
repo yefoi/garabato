@@ -4023,6 +4023,58 @@
   crearInterruptor("garabato-ligero", "modo-ligero", "[data-accion='ligero']", "LIGERO");
   crearInterruptor("garabato-contraste", "alto-contraste", "[data-accion='contraste']", "CONTRASTE");
 
+  var botonMas = $("[data-accion='mas']");
+  var cajaExtra = $("[data-extra]");
+  if (botonMas && cajaExtra) {
+    var extraAbierto = false;
+    try {
+      extraAbierto = localStorage.getItem("garabato-mas") === "on";
+    } catch (error) {
+      extraAbierto = false;
+    }
+    var pintarExtra = function () {
+      cajaExtra.hidden = !extraAbierto;
+      botonMas.textContent = extraAbierto ? "MENOS OPCIONES ▴" : "MÁS OPCIONES ▾";
+      botonMas.setAttribute("aria-expanded", String(extraAbierto));
+    };
+    pintarExtra();
+    botonMas.addEventListener("click", function () {
+      extraAbierto = !extraAbierto;
+      try {
+        localStorage.setItem("garabato-mas", extraAbierto ? "on" : "off");
+      } catch (error) {
+        return;
+      }
+      pintarExtra();
+    });
+  }
+
+  var botonSemillas = $("[data-accion='mas-semillas']");
+  var cajaSemillas = $(".semillas");
+  if (botonSemillas && cajaSemillas) {
+    var semillasAbiertas = false;
+    try {
+      semillasAbiertas = localStorage.getItem("garabato-semillas") === "on";
+    } catch (error) {
+      semillasAbiertas = false;
+    }
+    var pintarSemillas = function () {
+      cajaSemillas.classList.toggle("abiertas", semillasAbiertas);
+      botonSemillas.textContent = semillasAbiertas ? "− MENOS SEMILLAS" : "+ MÁS SEMILLAS";
+      botonSemillas.setAttribute("aria-expanded", String(semillasAbiertas));
+    };
+    pintarSemillas();
+    botonSemillas.addEventListener("click", function () {
+      semillasAbiertas = !semillasAbiertas;
+      try {
+        localStorage.setItem("garabato-semillas", semillasAbiertas ? "on" : "off");
+      } catch (error) {
+        return;
+      }
+      pintarSemillas();
+    });
+  }
+
   $$("[data-chip-prompt]").forEach(function (chip) {
     chip.addEventListener("click", function () {
       var texto = chip.getAttribute("data-chip-prompt") || "";

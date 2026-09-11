@@ -16,6 +16,14 @@ Generador net.art de dibujos de niños procedurales: escribes una palabra, el vi
 
 GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se suben ni se descargan de ningún sitio: se dibujan en vivo en el navegador con Canvas a partir de una semilla de texto. La estética mezcla dibujo infantil, píxel art, glitch y caos de la vieja web: un escáner roto interpretando la infancia.
 
+## Capturas
+
+![La pared](img/portada.png)
+
+![Más opciones](img/opciones.png)
+
+![Zoom de un dibujo](img/zoom.png)
+
 ## Cómo se usa
 
 - Abre `index.html` en un navegador moderno. No hace falta build, servidor ni instalar nada.
@@ -69,3 +77,8 @@ _blog_antiguo/    archivo del proyecto anterior (blog zetético)
 ## Estado
 
 Experimento en obras permanentes. Se aceptan fallos raros como parte del encanto.
+
+## Licencia
+
+- **Código** (HTML, CSS y JavaScript): licencia MIT, ver [LICENSE](LICENSE).
+- **Obra** (dibujos generados, textos e identidad visual): [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/): puedes compartir y adaptar dando crédito, sin uso comercial.
