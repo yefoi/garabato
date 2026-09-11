@@ -302,7 +302,7 @@ h3,
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.4rem 0 1rem;
+  padding: 0.9rem 0 0.7rem;
   flex-wrap: wrap;
 }
 
@@ -1784,7 +1784,7 @@ ul.check li.hecho::before {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 18px 14px;
-  padding: 2rem 0 1rem;
+  padding: 1.4rem 0 1rem;
 }
 
 .dibujo {
@@ -1854,7 +1854,7 @@ html.modo-caos .dibujo canvas {
 .generador {
   display: grid;
   gap: 1rem;
-  margin: 1.8rem 0 0;
+  margin: 1.1rem 0 0;
   padding: 1.3rem;
   background: var(--panel);
   border: 4px solid var(--linea);
@@ -2330,3 +2330,6 @@ html.alto-contraste body::after {
 .semillas.abiertas .chip.oculta {
   display: inline-block;
 }
+.contador-visitas .sellos { margin-left: 8px; }
+
+.contador-visitas .sellos span { width: 8px; height: 8px; }
