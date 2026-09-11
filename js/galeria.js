@@ -1923,6 +1923,552 @@
     cabeza(ctx, azar);
   };
 
+  var TINTA = "#2b3f8f";
+  var ROJO_BOLI = "#c23b3b";
+
+  var trazoBoli = function (ctx, puntos, azar, ancho) {
+    ctx.strokeStyle = TINTA;
+    ctx.lineWidth = ancho || 1.3;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.globalAlpha = 0.92;
+    ctx.beginPath();
+    var primero = true;
+    for (var i = 0; i < puntos.length - 1; i++) {
+      var a = puntos[i];
+      var b = puntos[i + 1];
+      var dx = b[0] - a[0];
+      var dy = b[1] - a[1];
+      var largo = Math.sqrt(dx * dx + dy * dy);
+      var pasos = Math.max(1, Math.round(largo / 4));
+      for (var p = 0; p <= pasos; p++) {
+        var t = p / pasos;
+        var desvio = p > 0 && p < pasos ? 1.1 : 0;
+        var x = a[0] + dx * t + (azar() - 0.5) * desvio;
+        var y = a[1] + dy * t + (azar() - 0.5) * desvio;
+        if (primero) {
+          ctx.moveTo(x, y);
+          primero = false;
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  };
+
+  var rayado = function (ctx, x, y, w, h, azar, densidad) {
+    ctx.strokeStyle = TINTA;
+    ctx.globalAlpha = 0.45;
+    ctx.lineWidth = 0.9;
+    var paso = densidad || 3;
+    for (var i = -h; i < w; i += paso + azar() * 2) {
+      ctx.beginPath();
+      ctx.moveTo(x + i, y + h);
+      ctx.lineTo(x + i + h, y);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  };
+
+  var garabatoTexto = function (ctx, x, y, ancho, azar) {
+    var puntos = [];
+    var pasos = Math.max(6, Math.round(ancho / 5));
+    var alto = 4 + azar() * 3;
+    var subiendo = azar() < 0.5;
+    for (var i = 0; i <= pasos; i++) {
+      var px = x + (ancho * i) / pasos;
+      var py = y + (azar() - 0.5) * alto;
+      if (i % 3 === 0) {
+        py += subiendo ? -3 : 3;
+      }
+      puntos.push([px, py]);
+    }
+    trazoBoli(ctx, puntos, azar, 1.1);
+    for (var d = 0; d < 3; d++) {
+      if (azar() < 0.5) {
+        ctx.fillStyle = TINTA;
+        ctx.fillRect(x + azar() * ancho, y - 4, 1.4, 1.4);
+      }
+    }
+  };
+
+  var espiralDibujo = function (ctx, cx, cy, radio, azar) {
+    ctx.strokeStyle = TINTA;
+    ctx.lineWidth = 1.3;
+    ctx.beginPath();
+    var vueltas = 3 + azar() * 2;
+    for (var a = 0; a < vueltas * Math.PI * 2; a += 0.25) {
+      var r = (a / (vueltas * Math.PI * 2)) * radio;
+      var x = cx + Math.cos(a) * r;
+      var y = cy + Math.sin(a) * r + (azar() - 0.5) * 0.8;
+      if (a === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+    ctx.stroke();
+  };
+
+  var bEspiral = function (ctx, azar) {
+    espiralDibujo(ctx, 0, 0, 24, azar);
+  };
+
+  var bCubo = function (ctx, azar) {
+    var s = 16;
+    trazoBoli(ctx, [[-s, -s + 6], [s - 6, -s + 6], [s - 6, s - 6], [-s, s - 6], [-s, -s + 6]], azar, 1.3);
+    trazoBoli(ctx, [[-s + 6, -s], [s, -s], [s, s], [-s + 6, s], [-s + 6, -s]], azar, 1.3);
+    trazoBoli(ctx, [[-s, -s + 6], [-s + 6, -s]], azar, 1);
+    trazoBoli(ctx, [[s - 6, -s + 6], [s, -s]], azar, 1);
+    trazoBoli(ctx, [[s - 6, s - 6], [s, s]], azar, 1);
+    trazoBoli(ctx, [[-s, s - 6], [-s + 6, s]], azar, 1);
+  };
+
+  var bOjo = function (ctx, azar) {
+    trazoBoli(ctx, [[-22, 0], [-14, -10], [0, -13], [14, -10], [22, 0], [14, 10], [0, 13], [-14, 10], [-22, 0]], azar, 1.2);
+    trazoBoli(ctx, [[-7, 0], [0, -7], [7, 0], [0, 7], [-7, 0]], azar, 1.4);
+    circulo(ctx, 0, 0, 2.5, TINTA);
+    for (var p = 0; p < 6; p++) {
+      var x = -20 + p * 8;
+      trazoBoli(ctx, [[x, -12 - Math.abs(p - 2.5)], [x + (p % 2 ? 2 : -2), -18 - Math.abs(p - 2.5)]], azar, 1);
+    }
+  };
+
+  var bEstrella = function (ctx, azar) {
+    var puntos = [];
+    for (var i = 0; i <= 10; i++) {
+      var r = i % 2 === 0 ? 22 : 9;
+      var a = -Math.PI / 2 + (i * Math.PI) / 5;
+      puntos.push([Math.cos(a) * r, Math.sin(a) * r]);
+    }
+    trazoBoli(ctx, puntos, azar, 1.2);
+  };
+
+  var bCorazon = function (ctx, azar) {
+    trazoBoli(ctx, [[0, 20], [-18, 2], [-16, -10], [-8, -16], [0, -10], [8, -16], [16, -10], [18, 2], [0, 20]], azar, 1.3);
+    trazoBoli(ctx, [[-8, -2], [0, 6], [8, -2]], azar, 1);
+  };
+
+  var bCara = function (ctx, azar) {
+    trazoBoli(ctx, [[-18, -6], [-16, -16], [-6, -20], [6, -20], [16, -16], [18, -6], [18, 6], [10, 16], [-10, 16], [-18, 6], [-18, -6]], azar, 1.3);
+    circulo(ctx, -6, -4, 1.8, TINTA);
+    circulo(ctx, 6, -4, 1.8, TINTA);
+    trazoBoli(ctx, [[-8, 6], [0, 10], [8, 6]], azar, 1.2);
+    for (var p = 0; p < 5; p++) {
+      trazoBoli(ctx, [[-14 + p * 7, -18], [-12 + p * 7, -24 - (p % 3) * 2]], azar, 1);
+    }
+  };
+
+  var bFlor = function (ctx, azar) {
+    for (var p = 0; p < 6; p++) {
+      var a = (p / 6) * Math.PI * 2;
+      trazoBoli(ctx, [[0, 0], [Math.cos(a) * 12, Math.sin(a) * 12]], azar, 1);
+    }
+    circulo(ctx, 0, 0, 5, TINTA);
+    trazoBoli(ctx, [[0, 12], [0, 32]], azar, 1.2);
+    trazoBoli(ctx, [[0, 22], [-8, 16], [-10, 22]], azar, 1);
+    trazoBoli(ctx, [[0, 26], [8, 20], [10, 26]], azar, 1);
+  };
+
+  var bGato = function (ctx, azar) {
+    trazoBoli(ctx, [[-14, -6], [-16, -16], [-8, -14], [0, -18], [8, -14], [16, -16], [14, -6], [12, 4], [0, 8], [-12, 4], [-14, -6]], azar, 1.2);
+    circulo(ctx, -4, -6, 1.5, TINTA);
+    circulo(ctx, 4, -6, 1.5, TINTA);
+    trazoBoli(ctx, [[0, -2], [-3, 1], [3, 1]], azar, 1);
+    trazoBoli(ctx, [[-16, -4], [-26, -6]], azar, 0.9);
+    trazoBoli(ctx, [[-16, 0], [-26, 1]], azar, 0.9);
+    trazoBoli(ctx, [[16, -4], [26, -6]], azar, 0.9);
+    trazoBoli(ctx, [[16, 0], [26, 1]], azar, 0.9);
+    trazoBoli(ctx, [[-8, 8], [-10, 24], [-2, 28]], azar, 1.1);
+    trazoBoli(ctx, [[8, 8], [10, 24], [2, 28]], azar, 1.1);
+    espiralDibujo(ctx, 18, 26, 8, azar);
+  };
+
+  var bPerro = function (ctx, azar) {
+    trazoBoli(ctx, [[-14, -8], [-12, -18], [-2, -14], [2, -14], [12, -18], [14, -8], [12, 4], [4, 8], [-4, 8], [-12, 4], [-14, -8]], azar, 1.2);
+    trazoBoli(ctx, [[-12, -18], [-16, -8]], azar, 1);
+    trazoBoli(ctx, [[12, -18], [16, -8]], azar, 1);
+    circulo(ctx, -4, -8, 1.5, TINTA);
+    circulo(ctx, 4, -8, 1.5, TINTA);
+    circulo(ctx, 0, -1, 2.5, TINTA);
+    trazoBoli(ctx, [[-3, 3], [0, 6], [3, 3]], azar, 1);
+    trazoBoli(ctx, [[0, 6], [0, 12], [4, 16]], azar, 1);
+  };
+
+  var bCasa = function (ctx, azar) {
+    trazoBoli(ctx, [[-16, 22], [-16, -4], [0, -20], [16, -4], [16, 22], [-16, 22]], azar, 1.3);
+    trazoBoli(ctx, [[-6, 22], [-6, 10], [4, 10], [4, 22]], azar, 1.1);
+    trazoBoli(ctx, [[6, 2], [12, 2], [12, 8], [6, 8], [6, 2]], azar, 1);
+    trazoBoli(ctx, [[8, -12], [8, -18]], azar, 1);
+    espiralDibujo(ctx, 12, -22, 5, azar);
+  };
+
+  var bArbol = function (ctx, azar) {
+    trazoBoli(ctx, [[-2, 30], [-4, 4], [-10, -2]], azar, 1.4);
+    trazoBoli(ctx, [[-4, 8], [6, 2]], azar, 1.2);
+    for (var i = 0; i < 5; i++) {
+      var a = (i / 5) * Math.PI * 2;
+      trazoBoli(ctx, [[Math.cos(a) * 14, -10 + Math.sin(a) * 10], [Math.cos(a) * 6, -10 + Math.sin(a) * 5]], azar, 1);
+    }
+    rayado(ctx, -10, -18, 20, 12, azar, 4);
+  };
+
+  var bMontana = function (ctx, azar) {
+    trazoBoli(ctx, [[-26, 20], [-6, -16], [0, -6], [8, -20], [26, 20]], azar, 1.3);
+    trazoBoli(ctx, [[-12, -6], [-8, -2], [-4, -6], [0, -2]], azar, 1);
+    trazoBoli(ctx, [[4, -14], [8, -10], [12, -14]], azar, 1);
+    trazoBoli(ctx, [[-22, 26], [22, 26]], azar, 1);
+  };
+
+  var bSol = function (ctx, azar) {
+    aro(ctx, 0, 0, 12, TINTA, 1.3, azar);
+    for (var i = 0; i < 10; i++) {
+      var a = (i / 10) * Math.PI * 2;
+      trazoBoli(ctx, [[Math.cos(a) * 16, Math.sin(a) * 16], [Math.cos(a) * 24, Math.sin(a) * 24]], azar, 1);
+    }
+    circulo(ctx, -4, -2, 1.3, TINTA);
+    circulo(ctx, 4, -2, 1.3, TINTA);
+    trazoBoli(ctx, [[-5, 5], [0, 8], [5, 5]], azar, 1);
+  };
+
+  var bLuna = function (ctx, azar) {
+    trazoBoli(ctx, [[4, -20], [-8, -14], [-14, 0], [-8, 14], [4, 20], [-2, 8], [-4, 0], [-2, -8], [4, -20]], azar, 1.2);
+    circulo(ctx, -4, -4, 1.4, TINTA);
+    circulo(ctx, -7, 6, 1.8, TINTA);
+    trazoBoli(ctx, [[16, -16], [18, -12], [16, -8], [18, -4]], azar, 1);
+  };
+
+  var bNube = function (ctx, azar) {
+    aro(ctx, -10, 0, 9, TINTA, 1.2, azar);
+    aro(ctx, 4, -4, 11, TINTA, 1.2, azar);
+    aro(ctx, 14, 2, 8, TINTA, 1.2, azar);
+    trazoBoli(ctx, [[-18, 6], [22, 6]], azar, 1);
+    for (var i = 0; i < 5; i++) {
+      var x = -14 + i * 9;
+      trazoBoli(ctx, [[x, 10], [x - 2, 20 + azar() * 8]], azar, 1);
+    }
+  };
+
+  var bRayo = function (ctx, azar) {
+    trazoBoli(ctx, [[2, -22], [-6, -4], [0, -2], [-4, 16], [4, 6], [-2, 4], [4, 24]], azar, 1.6);
+  };
+
+  var bFlecha = function (ctx, azar) {
+    trazoBoli(ctx, [[-24, 16], [20, -18]], azar, 1.3);
+    trazoBoli(ctx, [[20, -18], [8, -16]], azar, 1.1);
+    trazoBoli(ctx, [[20, -18], [18, -6]], azar, 1.1);
+    trazoBoli(ctx, [[-24, 16], [-18, 10]], azar, 1);
+    trazoBoli(ctx, [[-24, 16], [-20, 4]], azar, 1);
+    rayado(ctx, -6, -8, 10, 10, azar, 3);
+  };
+
+  var bEspada = function (ctx, azar) {
+    trazoBoli(ctx, [[-2, -26], [0, 10]], azar, 1.6);
+    trazoBoli(ctx, [[-12, 10], [12, 10]], azar, 1.4);
+    trazoBoli(ctx, [[0, 10], [0, 22]], azar, 1.4);
+    circulo(ctx, 0, 24, 2.5, TINTA);
+    trazoBoli(ctx, [[-2, -26], [0, -20], [0, -4]], azar, 1);
+  };
+
+  var bDiana = function (ctx, azar) {
+    aro(ctx, 0, 0, 20, TINTA, 1.2, azar);
+    aro(ctx, 0, 0, 13, TINTA, 1.1, azar);
+    aro(ctx, 0, 0, 6, TINTA, 1.1, azar);
+    circulo(ctx, 0, 0, 1.5, TINTA);
+    trazoBoli(ctx, [[18, -18], [0, 0]], azar, 1.2);
+  };
+
+  var bReloj = function (ctx, azar) {
+    aro(ctx, 0, 0, 20, TINTA, 1.3, azar);
+    for (var i = 0; i < 12; i++) {
+      var a = (i / 12) * Math.PI * 2;
+      trazoBoli(ctx, [[Math.cos(a) * 16, Math.sin(a) * 16], [Math.cos(a) * 18, Math.sin(a) * 18]], azar, 1);
+    }
+    trazoBoli(ctx, [[0, 0], [0, -12]], azar, 1.4);
+    trazoBoli(ctx, [[0, 0], [9, 4]], azar, 1.4);
+  };
+
+  var bLaberinto = function (ctx, azar) {
+    trazoBoli(ctx, [[-22, -20], [22, -20], [22, 20], [-22, 20], [-22, -20]], azar, 1.2);
+    trazoBoli(ctx, [[-22, -10], [10, -10], [10, 2], [-10, 2], [-10, 12], [22, 12]], azar, 1.1);
+  };
+
+  var bBarco = function (ctx, azar) {
+    trazoBoli(ctx, [[-20, 6], [20, 6], [12, 18], [-12, 18], [-20, 6]], azar, 1.3);
+    trazoBoli(ctx, [[-2, 6], [-2, -22]], azar, 1.2);
+    trazoBoli(ctx, [[-2, -20], [12, -8], [-2, -6]], azar, 1.1);
+    trazoBoli(ctx, [[20, 14], [24, 10], [28, 14]], azar, 1);
+  };
+
+  var bAvion = function (ctx, azar) {
+    trazoBoli(ctx, [[-22, 10], [4, -6], [12, -18], [10, -2], [22, 0], [4, 6], [-2, 16], [-6, 4], [-22, 10]], azar, 1.2);
+    trazoBoli(ctx, [[-22, 10], [-6, 4]], azar, 1);
+  };
+
+  var bPez = function (ctx, azar) {
+    trazoBoli(ctx, [[-20, 0], [-10, -12], [8, -12], [20, -4], [20, 4], [8, 12], [-10, 12], [-20, 0]], azar, 1.2);
+    trazoBoli(ctx, [[20, -4], [28, -12], [28, 12], [20, 4]], azar, 1.1);
+    circulo(ctx, -10, -2, 1.6, TINTA);
+    for (var i = 0; i < 3; i++) {
+      trazoBoli(ctx, [[-4 + i * 7, -8], [-1 + i * 7, 0], [-4 + i * 7, 8]], azar, 0.9);
+    }
+  };
+
+  var bPajaro = function (ctx, azar) {
+    trazoBoli(ctx, [[-20, -6], [-10, -12], [0, -4], [10, -12], [20, -6]], azar, 1.3);
+    trazoBoli(ctx, [[0, -4], [2, 6]], azar, 1.1);
+    trazoBoli(ctx, [[0, 2], [-6, 8], [0, 8], [6, 8], [0, 2]], azar, 1);
+    trazoBoli(ctx, [[6, 8], [8, 14]], azar, 0.9);
+  };
+
+  var bMano = function (ctx, azar) {
+    trazoBoli(ctx, [[-14, 18], [-16, 0], [-12, -10], [-10, 0], [-8, -18], [-5, -8], [-3, -22], [0, -10], [3, -20], [5, -8], [8, -14], [10, -2], [12, 6], [6, 16], [-14, 18]], azar, 1.2);
+    rayado(ctx, -8, 4, 14, 10, azar, 4);
+  };
+
+  var bMovil = function (ctx, azar) {
+    trazoBoli(ctx, [[-10, -20], [10, -20], [10, 20], [-10, 20], [-10, -20]], azar, 1.3);
+    trazoBoli(ctx, [[-6, -16], [6, -16]], azar, 1);
+    circulo(ctx, 0, 14, 1.8, TINTA);
+    trazoBoli(ctx, [[-5, -10], [5, -10]], azar, 0.9);
+  };
+
+  var bLista = function (ctx, azar) {
+    trazoBoli(ctx, [[-14, -22], [14, -22], [14, 22], [-14, 22], [-14, -22]], azar, 1.2);
+    for (var i = 0; i < 4; i++) {
+      var y = -14 + i * 9;
+      trazoBoli(ctx, [[-10, y], [-6, y], [-6, y + 4], [-10, y + 4], [-10, y]], azar, 0.9);
+      garabatoTexto(ctx, -2, y + 2, 14, azar);
+      if (i === 2) {
+        trazoBoli(ctx, [[-2, y + 2], [12, y - 2]], azar, 1.2);
+      }
+    }
+  };
+
+  var bFormula = function (ctx, azar) {
+    garabatoTexto(ctx, -20, -6, 18, azar);
+    trazoBoli(ctx, [[0, -14], [0, 6]], azar, 1.1);
+    trazoBoli(ctx, [[-4, -10], [4, -10]], azar, 0.9);
+    trazoBoli(ctx, [[-4, 2], [4, 2]], azar, 0.9);
+    garabatoTexto(ctx, 6, -6, 16, azar);
+    trazoBoli(ctx, [[0, 14], [16, 14]], azar, 1.2);
+    garabatoTexto(ctx, 2, 20, 12, azar);
+  };
+
+  var bTresEnRaya = function (ctx, azar) {
+    trazoBoli(ctx, [[-20, -20], [-20, 20]], azar, 1.2);
+    trazoBoli(ctx, [[0, -20], [0, 20]], azar, 1.2);
+    trazoBoli(ctx, [[20, -20], [20, 20]], azar, 1.2);
+    trazoBoli(ctx, [[-20, -6], [20, -6]], azar, 1.2);
+    trazoBoli(ctx, [[-20, 8], [20, 8]], azar, 1.2);
+    trazoBoli(ctx, [[-14, -16], [-2, -8]], azar, 1);
+    trazoBoli(ctx, [[-2, -16], [-14, -8]], azar, 1);
+    aro(ctx, 10, -16, 4, TINTA, 1, azar);
+    trazoBoli(ctx, [[-14, 12], [-2, 18]], azar, 1);
+    trazoBoli(ctx, [[-2, 12], [-14, 18]], azar, 1);
+  };
+
+  var bNombre = function (ctx, azar) {
+    garabatoTexto(ctx, -22, 0, 30, azar);
+    trazoBoli(ctx, [[-22, 8], [10, 8]], azar, 1.2);
+    trazoBoli(ctx, [[4, -14], [22, -14], [4, -6], [22, -6]], azar, 1);
+  };
+
+  var bSignos = function (ctx, azar) {
+    trazoBoli(ctx, [[-14, -14], [0, 2], [-4, 10]], azar, 1.5);
+    circulo(ctx, -4, 18, 1.6, TINTA);
+    trazoBoli(ctx, [[6, -16], [10, -10], [6, -4], [10, 2]], azar, 1.3);
+    trazoBoli(ctx, [[16, -14], [22, 2]], azar, 1.2);
+  };
+
+  var bCaos = function (ctx, azar) {
+    for (var i = 0; i < 14; i++) {
+      var a = azar() * Math.PI * 2;
+      var r = 6 + azar() * 20;
+      espiralDibujo(ctx, Math.cos(a) * r, Math.sin(a) * r, 3 + azar() * 5, azar);
+    }
+  };
+
+  var CATALOGO_BOLI = [
+    { f: bEspiral, titulo: "espiral de teléfono", claves: ["espiral", "remolino"] },
+    { f: bCubo, titulo: "cubo imposible", claves: ["cubo", "dado", "3d"] },
+    { f: bOjo, titulo: "ojo que mira", claves: ["ojo", "mirada"] },
+    { f: bEstrella, titulo: "estrella de margen", claves: ["estrella"] },
+    { f: bCorazon, titulo: "corazón con inicial", claves: ["corazon", "amor"] },
+    { f: bCara, titulo: "carita", claves: ["cara", "sonrisa", "emoji"] },
+    { f: bFlor, titulo: "flor de esquina", claves: ["flor", "margarita"] },
+    { f: bGato, titulo: "gato a boli", claves: ["gato", "gatito", "miau"] },
+    { f: bPerro, titulo: "perro a boli", claves: ["perro", "perrito", "guau"] },
+    { f: bCasa, titulo: "casa con humo", claves: ["casa", "hogar"] },
+    { f: bArbol, titulo: "árbol rayado", claves: ["arbol", "manzano"] },
+    { f: bMontana, titulo: "montañas", claves: ["montana", "picos"] },
+    { f: bSol, titulo: "sol de margen", claves: ["sol"] },
+    { f: bLuna, titulo: "luna", claves: ["luna"] },
+    { f: bNube, titulo: "nube con lluvia", claves: ["nube", "lluvia"] },
+    { f: bRayo, titulo: "rayo", claves: ["rayo", "tormenta"] },
+    { f: bFlecha, titulo: "flecha", claves: ["flecha"] },
+    { f: bEspada, titulo: "espada", claves: ["espada", "daga"] },
+    { f: bDiana, titulo: "diana con flecha", claves: ["diana", "blanco"] },
+    { f: bReloj, titulo: "reloj de clase", claves: ["reloj", "hora"] },
+    { f: bLaberinto, titulo: "laberinto", claves: ["laberinto"] },
+    { f: bBarco, titulo: "barco", claves: ["barco", "velero"] },
+    { f: bAvion, titulo: "avión de papel", claves: ["avion", "avioneta"] },
+    { f: bPez, titulo: "pez", claves: ["pez", "peces"] },
+    { f: bPajaro, titulo: "pájaro", claves: ["pajaro", "gorrion"] },
+    { f: bMano, titulo: "contorno de mano", claves: ["mano", "palma"] },
+    { f: bMovil, titulo: "móvil", claves: ["movil", "telefono", "celular"] },
+    { f: bLista, titulo: "lista de deberes", claves: ["lista", "deberes", "tareas", "checklist"] },
+    { f: bFormula, titulo: "fórmula ilegible", claves: ["formula", "mates", "ecuacion", "matematicas"] },
+    { f: bTresEnRaya, titulo: "tres en raya", claves: ["tresenraya", "equis", "círculos"] },
+    { f: bNombre, titulo: "nombre y rúbrica", claves: ["nombre", "firma", "apellido"] },
+    { f: bSignos, titulo: "signos de examen", claves: ["signos", "preguntas", "examen"] },
+    { f: bCaos, titulo: "aburrimiento puro", claves: ["caos", "aburrimiento", "garabato"] }
+  ];
+
+  var conPluma = function (ctx, cx, cy, escala, fn, azar) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(escala, escala);
+    fn(ctx, azar);
+    ctx.restore();
+  };
+
+  var papelBoli = function (ctx, azar) {
+    var tipo = Math.floor(azar() * 3);
+    ctx.fillStyle = tipo === 2 ? "#fdfbf0" : "#f8f8f4";
+    ctx.fillRect(0, 0, L, A);
+    if (tipo === 0) {
+      ctx.strokeStyle = "rgba(120,150,210,0.55)";
+      ctx.lineWidth = 0.8;
+      for (var y = 10; y < A; y += 8) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(L, y);
+        ctx.stroke();
+      }
+      ctx.strokeStyle = "rgba(200,90,90,0.7)";
+      ctx.beginPath();
+      ctx.moveTo(12, 0);
+      ctx.lineTo(12, A);
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0,0,0,0.10)";
+      for (var h = 0; h < 3; h++) {
+        ctx.beginPath();
+        ctx.arc(5, 25 + h * 35, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (tipo === 1) {
+      ctx.strokeStyle = "rgba(150,170,215,0.4)";
+      ctx.lineWidth = 0.6;
+      for (var gx = 0; gx < L; gx += 8) {
+        ctx.beginPath();
+        ctx.moveTo(gx, 0);
+        ctx.lineTo(gx, A);
+        ctx.stroke();
+      }
+      for (var gy = 0; gy < A; gy += 8) {
+        ctx.beginPath();
+        ctx.moveTo(0, gy);
+        ctx.lineTo(L, gy);
+        ctx.stroke();
+      }
+    } else {
+      ctx.globalAlpha = 0.12;
+      ctx.strokeStyle = "#8a5a2a";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(20 + azar() * 50, 20 + azar() * 70, 10 + azar() * 8, azar() * 4, azar() * 4 + 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "rgba(0,0,0,0.06)";
+      ctx.beginPath();
+      ctx.moveTo(L, 0);
+      ctx.lineTo(L - 12, 0);
+      ctx.lineTo(L, 12);
+      ctx.closePath();
+      ctx.fill();
+    }
+  };
+
+  var dibujarCuadroX = function (ctx, x, y, azar) {
+    var s = 6 + azar() * 6;
+    trazoBoli(ctx, [[x, y], [x + s, y], [x + s, y + s], [x, y + s], [x, y]], azar, 1);
+    trazoBoli(ctx, [[x, y], [x + s, y + s]], azar, 1);
+    trazoBoli(ctx, [[x + s, y], [x, y + s]], azar, 1);
+  };
+
+  var dibujarAdulto = function (ctx, azar, registro) {
+    var sujetos = buscarCoincidencias(registro.p, CATALOGO_BOLI);
+    if (sujetos.length > 1) {
+      conPluma(ctx, 68, 22, 0.55, sujetos[1].f, azar);
+      conPluma(ctx, 45, 64, 1, sujetos[0].f, azar);
+    } else if (sujetos.length === 1) {
+      conPluma(ctx, 48, 62, 1, sujetos[0].f, azar);
+    } else {
+      var a1 = CATALOGO_BOLI[Math.floor(azar() * CATALOGO_BOLI.length)];
+      var a2 = CATALOGO_BOLI[Math.floor(azar() * CATALOGO_BOLI.length)];
+      conPluma(ctx, 44, 64, 1, a1.f, azar);
+      conPluma(ctx, 72, 24, 0.5, a2.f, azar);
+    }
+    var extras = Math.floor(azar() * 3);
+    for (var e = 0; e < extras; e++) {
+      var x = 8 + azar() * 78;
+      var y = 8 + azar() * 100;
+      var tipo = Math.floor(azar() * 5);
+      if (tipo === 0) {
+        dibujarCuadroX(ctx, x, y, azar);
+      } else if (tipo === 1) {
+        garabatoTexto(ctx, x, y, 14 + azar() * 18, azar);
+      } else if (tipo === 2) {
+        trazoBoli(ctx, [[x, y], [x + 6, y - 5], [x + 12, y + 2]], azar, 1);
+      } else if (tipo === 3) {
+        espiralDibujo(ctx, x, y, 4 + azar() * 5, azar);
+      } else {
+        conPluma(ctx, x, y, 0.28, CATALOGO_BOLI[Math.floor(azar() * CATALOGO_BOLI.length)].f, azar);
+      }
+    }
+    garabatoTexto(ctx, 14, 12 + azar() * 8, 30 + azar() * 40, azar);
+    if (azar() < 0.5) {
+      garabatoTexto(ctx, 14, 96 + azar() * 12, 30 + azar() * 50, azar);
+    }
+  };
+
+  var pintarBoli = function (registro, azar, lienzo, ctx, secreto) {
+    papelBoli(ctx, azar);
+    var perdido = azar() < 0.05;
+    if (perdido) {
+      for (var s = 0; s < 900; s++) {
+        var dado = azar();
+        ctx.fillStyle = dado < 0.45 ? "#0b0b12" : (dado < 0.72 ? "#00ffe1" : "#ff2bd1");
+        ctx.fillRect(Math.floor(azar() * L), Math.floor(azar() * A), 1, 1);
+      }
+      return { lienzo: lienzo, perdido: true, secreto: null };
+    }
+    dibujarAdulto(ctx, azar, registro);
+    if (secreto) {
+      secreto.sello(ctx);
+    }
+    var nivel = Math.min(2, (registro.n || 0) + (azar() < 0.25 ? 1 : 0));
+    if (secreto) {
+      nivel = 2;
+    }
+    glitch(lienzo, azar, nivel);
+    if (registro.t && registro.t.length) {
+      registro.t.forEach(function (capa) {
+        if (!capa || !capa.p) {
+          return;
+        }
+        ctx.fillStyle = capa.c || "#ff2bd1";
+        for (var i = 0; i < capa.p.length; i += 2) {
+          ctx.fillRect(capa.p[i], capa.p[i + 1], 1, 1);
+        }
+      });
+    }
+    return { lienzo: lienzo, perdido: false, secreto: secreto };
+  };
+
   var CATALOGO = [
     { f: dCasa, titulo: "mi casa", claves: ["casa", "hogar", "chalet"] },
     { f: dGato, titulo: "mi gat0", claves: ["gato", "gata", "gatito", "miau"], parte: { cabeza: cGato } },
@@ -2435,6 +2981,10 @@
     lienzo.width = L;
     lienzo.height = A;
     var ctx = lienzo.getContext("2d");
+    var secreto = buscarSecreto(registro.p);
+    if (registro.m === "a") {
+      return pintarBoli(registro, azar, lienzo, ctx, secreto);
+    }
     papel(ctx, azar);
     doodles(ctx, azar);
     var perdido = azar() < 0.06;
@@ -2552,6 +3102,12 @@
   var NIVELES = ["POCO", "NORMAL", "BRUTAL"];
   var paredCompartida = false;
   var contadorGeneraciones = 0;
+  var modoActual = "n";
+  try {
+    modoActual = localStorage.getItem("garabato-modo") === "a" ? "a" : "n";
+  } catch (error) {
+    modoActual = "n";
+  }
 
   var leerRegistros = function () {
     try {
@@ -2727,6 +3283,7 @@
       p: prompt.slice(0, 60),
       s: nuevaSemilla(prompt),
       n: secreto ? 2 : nivelBase,
+      m: modoActual,
       f: new Date().toLocaleString("es-ES")
     });
     contadorGeneraciones += 1;
@@ -2770,6 +3327,7 @@
       s: nuevaSemilla(registro.p),
       n: registro.n || nivelBase,
       g: (registro.g || 0) + 1,
+      m: registro.m || "n",
       padre: { p: registro.p, s: registro.s, g: registro.g || 0 },
       f: new Date().toLocaleString("es-ES")
     });
@@ -3011,6 +3569,7 @@
       } else {
         item.push(null);
       }
+      item.push(registro.m || "n");
       return item;
     });
   };
@@ -3030,6 +3589,7 @@
           s: String(item[0]) + "#" + String(item[1] || "x"),
           n: item[2] || 0,
           g: item[3] || 0,
+          m: item[6] === "a" ? "a" : "n",
           f: ""
         };
         if (Array.isArray(item[4])) {
@@ -3463,6 +4023,7 @@
       s: registro.s,
       n: registro.n || 0,
       g: registro.g || 0,
+      m: registro.m || "n",
       t: registro.t || null,
       padre: registro.padre || null,
       f: registro.f || ""
@@ -3572,6 +4133,7 @@
         s: padre.s + "#mut" + i + Math.random().toString(36).slice(2, 7),
         n: padre.n || nivelBase,
         g: (padre.g || 0) + 1,
+        m: padre.m || "n",
         padre: { p: padre.p, s: padre.s, g: padre.g || 0 },
         f: new Date().toLocaleString("es-ES")
       };
@@ -4072,6 +4634,28 @@
         return;
       }
       pintarSemillas();
+    });
+  }
+
+  var botonModo = $("[data-accion='modo']");
+  var pintarModo = function () {
+    if (!botonModo) {
+      return;
+    }
+    botonModo.textContent = modoActual === "a" ? "[ MODO: ADULTOS ]" : "[ MODO: NIÑOS ]";
+    botonModo.setAttribute("aria-pressed", String(modoActual === "a"));
+  };
+  pintarModo();
+  if (botonModo) {
+    botonModo.addEventListener("click", function () {
+      modoActual = modoActual === "a" ? "n" : "a";
+      try {
+        localStorage.setItem("garabato-modo", modoActual);
+      } catch (error) {
+        return;
+      }
+      pintarModo();
+      mostrarVirus(modoActual === "a" ? "modo adultos: boli y aburrimiento." : "modo niños: crayón y colores.");
     });
   }
 

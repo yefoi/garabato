@@ -24,6 +24,8 @@ GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se s
 
 ![Zoom de un dibujo](img/zoom.png)
 
+![Modo adultos](img/adultos.png)
+
 ## Cómo se usa
 
 - Abre `index.html` en un navegador moderno. No hace falta build, servidor ni instalar nada.
@@ -34,6 +36,7 @@ GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se s
 ## Qué hace
 
 - **54 sujetos** dibujados por código, más **quimeras por partes**: 25 cabezas × 14 cuerpos × 14 fondos.
+- **Dos modos**: NIÑOS (crayón, colores, fondos y firmas) y ADULTOS (boli azul sobre papel de cuaderno: línea suelta, garabatos de aburrimiento, listas tachadas y texto ilegible). El modo se guarda en cada dibujo.
 - **18 accesorios**, 14 fondos, 6 climas, 4 marcos, 6 tintes × 5 modos de color, espejo horizontal, rótulo manuscrito con letra escolar, firmas («por Lucía, 7 años») y sellos de profesor.
 - **Corrupción de escáner roto**: datamosh, canales RGB desplazados, pixel sort, bloques permutados y ruido de píxeles.
 - **Linaje**: mutar un dibujo engendra variantes con generación (`g1`, `g2`…) y padre registrado.
