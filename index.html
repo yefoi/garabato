@@ -28,152 +28,193 @@
       <p class="marca"><a href="index.html" data-scramble>GARABATO.EXE</a></p>
       <p class="lema">GENERADOR DE GARABATOS // v0.5</p>
     </div>
-    <p class="contador-visitas"><span class="etiqueta-contador">DIBUJOS</span> <span data-total>000</span> <span class="sellos" data-sellos aria-label="sellos"></span></p>
+    <div class="instrumentos">
+      <nav class="menu" aria-label="Principal">
+        <button class="tema" type="button" data-accion="tema" aria-pressed="true">[ CRT: ON ]</button>
+      </nav>
+      <button class="tema control" type="button" data-accion="modo" aria-pressed="false">[ MODO: CRAYÓN ]</button>
+      <p class="contador-visitas"><span class="etiqueta-contador">DIBUJOS</span> <span data-total>000</span> <span class="sellos" data-sellos aria-label="sellos"></span></p>
+      <button class="boton pintarron" type="button" data-accion="pintarron">PINTARRÓN</button>
+      <button class="tema control" type="button" data-accion="ir-pared">PARED</button>
+      <button class="tema control" type="button" data-accion="historial">HISTORIAL</button>
+      <button class="tema control solo-movil" type="button" data-accion="menu-abrir" aria-expanded="false" aria-label="Más opciones">☰</button>
+    </div>
   </div>
-  <nav class="menu" aria-label="Principal">
-    <button class="tema" type="button" data-accion="tema" aria-pressed="true">[ CRT: ON ]</button>
-  </nav>
 </header>
 
 <main id="contenido">
 
-  <section class="generador" id="generador" aria-labelledby="titulo-generador">
-    <h2 id="titulo-generador">GENERADOR</h2>
-    <input type="text" id="prompt" data-prompt placeholder="gato astronauta" aria-label="semilla" autocomplete="off">
-    <div class="controles">
-      <button class="boton" type="button" data-accion="generar">GENERAR DIBUJO</button>
-      <button class="boton claro" type="button" data-accion="suerte">SUERTE</button>
-      <button class="boton claro" type="button" data-accion="nivel" aria-pressed="false">[ GLITCH: NORMAL ]</button>
-      <button class="boton claro" type="button" data-accion="modo" aria-pressed="false">[ MODO: CRAYÓN ]</button>
-      <button class="boton claro" type="button" data-accion="mas" aria-expanded="false">MÁS OPCIONES ▾</button>
+  <section class="generador ventana" id="generador" aria-labelledby="titulo-generador">
+    <div class="ventana-barra">
+      <span class="ventana-puntos" aria-hidden="true"><i></i><i></i><i></i></span>
+      <h2 id="titulo-generador">GENERADOR_PROMPT</h2>
+      <p class="ventana-meta" aria-hidden="true"><span>CURSOR: <span data-cursor>512:312</span></span><span>KERNEL: 5.6.9-ARCH1</span></p>
     </div>
-    <div class="controles-extra" data-extra hidden>
-      <div class="grupo">
-        <p class="grupo-titulo">PARED</p>
-        <div class="controles">
-          <button class="boton claro" type="button" data-accion="bajar">DESCARGAR PARED</button>
-          <button class="boton claro" type="button" data-accion="exportar">EXPORTAR</button>
-          <button class="boton claro" type="button" data-accion="importar">IMPORTAR</button>
-          <button class="boton claro" type="button" data-accion="limpiar">VACIAR</button>
+    <div class="ventana-cuerpo">
+      <label class="etiqueta-prompt" for="prompt"><span class="caret" aria-hidden="true">&gt;</span> ingrese comando / objeto / criatura:</label>
+      <div class="campo-prompt">
+        <span class="caret" aria-hidden="true">&raquo;</span>
+        <input type="text" id="prompt" data-prompt placeholder="gato astronauta" aria-label="semilla" autocomplete="off">
+        <span class="campo-meta" aria-hidden="true">utf-8 // latin-es1</span>
+      </div>
+      <div class="controles">
+        <button class="boton" type="button" data-accion="generar">GENERAR DIBUJO</button>
+        <button class="boton claro" type="button" data-accion="suerte">SUERTE</button>
+        <button class="boton claro" type="button" data-accion="nivel" aria-pressed="false">[ GLITCH: NORMAL ]</button>
+        <button class="boton claro" type="button" data-accion="modo" aria-pressed="false">[ MODO: CRAYÓN ]</button>
+        <button class="boton claro" type="button" data-accion="mas" aria-expanded="false">MÁS OPCIONES ▾</button>
+      </div>
+      <div class="controles-extra" data-extra hidden>
+        <div class="grupo">
+          <p class="grupo-titulo">PARED</p>
+          <div class="controles">
+            <button class="boton claro" type="button" data-accion="bajar">DESCARGAR PARED</button>
+            <button class="boton claro" type="button" data-accion="exportar">EXPORTAR</button>
+            <button class="boton claro" type="button" data-accion="importar">IMPORTAR</button>
+            <button class="boton claro" type="button" data-accion="limpiar">VACIAR</button>
+          </div>
+        </div>
+        <div class="grupo">
+          <p class="grupo-titulo">JUEGO</p>
+          <div class="controles">
+            <button class="boton claro" type="button" data-accion="auto" aria-pressed="false">[ AUTO: OFF ]</button>
+            <button class="boton claro" type="button" data-accion="variantes">4 VARIANTES</button>
+            <button class="boton claro" type="button" data-accion="mas-glitch">MÁS GLITCH A TODO</button>
+            <button class="boton claro" type="button" data-accion="compartir">COMPARTIR PARED</button>
+            <button class="boton claro" type="button" data-accion="grabar">GRABAR CORRUPCIÓN</button>
+            <button class="boton claro" type="button" data-accion="camara">CÁMARA</button>
+            <button class="boton claro" type="button" data-accion="papelera">PAPELERA</button>
+          </div>
+        </div>
+        <div class="grupo">
+          <p class="grupo-titulo">PANTALLA</p>
+          <div class="controles">
+            <span class="opcion-etiqueta">MODO RASTER CRT</span>
+            <button class="boton claro" type="button" data-accion="tema" aria-pressed="true">[ CRT: ON ]</button>
+            <span class="opcion-etiqueta">FILTRO RETRO TV</span>
+            <button class="boton claro" type="button" data-accion="tv" aria-pressed="false">[ TV: OFF ]</button>
+            <span class="opcion-etiqueta">RENDIMIENTO LIGERO</span>
+            <button class="boton claro" type="button" data-accion="ligero" aria-pressed="false">[ LIGERO: OFF ]</button>
+            <span class="opcion-etiqueta">ALTO CONTRASTE</span>
+            <button class="boton claro" type="button" data-accion="contraste" aria-pressed="false">[ CONTRASTE: OFF ]</button>
+          </div>
         </div>
       </div>
-      <div class="grupo">
-        <p class="grupo-titulo">JUEGO</p>
-        <div class="controles">
-          <button class="boton claro" type="button" data-accion="auto" aria-pressed="false">[ AUTO: OFF ]</button>
-          <button class="boton claro" type="button" data-accion="variantes">4 VARIANTES</button>
-          <button class="boton claro" type="button" data-accion="mas-glitch">MÁS GLITCH A TODO</button>
-          <button class="boton claro" type="button" data-accion="compartir">COMPARTIR PARED</button>
-          <button class="boton claro" type="button" data-accion="grabar">GRABAR CORRUPCIÓN</button>
-          <button class="boton claro" type="button" data-accion="camara">CÁMARA</button>
-          <button class="boton claro" type="button" data-accion="papelera">PAPELERA</button>
-        </div>
-      </div>
-      <div class="grupo">
-        <p class="grupo-titulo">PANTALLA</p>
-        <div class="controles">
-          <button class="boton claro" type="button" data-accion="tv" aria-pressed="false">[ TV: OFF ]</button>
-          <button class="boton claro" type="button" data-accion="ligero" aria-pressed="false">[ LIGERO: OFF ]</button>
-          <button class="boton claro" type="button" data-accion="contraste" aria-pressed="false">[ CONTRASTE: OFF ]</button>
-        </div>
+      <div class="semillas-caja">
+        <p class="semillas-cabecera"><span>SEMILLAS RÁPIDAS</span><span class="semillas-nota">[ CLICK PARA INYECTAR ] ──────</span></p>
+        <p class="semillas" aria-label="Sugerencias">
+          <button class="chip" type="button" data-chip-prompt="gato">gato</button>
+          <button class="chip" type="button" data-chip-prompt="perro">perro</button>
+          <button class="chip" type="button" data-chip-prompt="dino">dino</button>
+          <button class="chip" type="button" data-chip-prompt="robot">robot</button>
+          <button class="chip" type="button" data-chip-prompt="unicornio">unicornio</button>
+          <button class="chip" type="button" data-chip-prompt="ballena">ballena</button>
+          <button class="chip" type="button" data-chip-prompt="tortuga">tortuga</button>
+          <button class="chip" type="button" data-chip-prompt="caracol">caracol</button>
+          <button class="chip oculta" type="button" data-chip-prompt="helado">helado</button>
+          <button class="chip oculta" type="button" data-chip-prompt="monstruo">monstruo</button>
+          <button class="chip oculta" type="button" data-chip-prompt="cohete">cohete</button>
+          <button class="chip oculta" type="button" data-chip-prompt="ovni">ovni</button>
+          <button class="chip oculta" type="button" data-chip-prompt="castillo">castillo</button>
+          <button class="chip oculta" type="button" data-chip-prompt="corona">corona</button>
+          <button class="chip oculta" type="button" data-chip-prompt="globo">globo</button>
+          <button class="chip oculta" type="button" data-chip-prompt="fiesta">fiesta</button>
+          <button class="chip oculta" type="button" data-chip-prompt="estrella">estrella</button>
+          <button class="chip oculta" type="button" data-chip-prompt="arcoiris">arcoíris</button>
+          <button class="chip oculta" type="button" data-chip-prompt="rana">rana</button>
+          <button class="chip oculta" type="button" data-chip-prompt="leon">león</button>
+          <button class="chip oculta" type="button" data-chip-prompt="pinguino">pingüino</button>
+          <button class="chip oculta" type="button" data-chip-prompt="elefante">elefante</button>
+          <button class="chip oculta" type="button" data-chip-prompt="conejo">conejo</button>
+          <button class="chip oculta" type="button" data-chip-prompt="buho">búho</button>
+          <button class="chip oculta" type="button" data-chip-prompt="tarta">tarta</button>
+          <button class="chip oculta" type="button" data-chip-prompt="barco">barco</button>
+          <button class="chip oculta" type="button" data-chip-prompt="molino">molino</button>
+          <button class="chip oculta" type="button" data-chip-prompt="gafas">gafas</button>
+          <button class="chip oculta" type="button" data-chip-prompt="bigote">bigote</button>
+          <button class="chip oculta" type="button" data-chip-prompt="balon">balón</button>
+          <button class="chip oculta" type="button" data-chip-prompt="nina">niña</button>
+          <button class="chip oculta" type="button" data-chip-prompt="princesa">princesa</button>
+          <button class="chip oculta" type="button" data-chip-prompt="pirata">pirata</button>
+          <button class="chip oculta" type="button" data-chip-prompt="bruja">bruja</button>
+          <button class="chip oculta" type="button" data-chip-prompt="fantasma">fantasma</button>
+          <button class="chip oculta" type="button" data-chip-prompt="dragon">dragón</button>
+          <button class="chip oculta" type="button" data-chip-prompt="vaca">vaca</button>
+          <button class="chip oculta" type="button" data-chip-prompt="zorro">zorro</button>
+          <button class="chip oculta" type="button" data-chip-prompt="heroe">superhéroe</button>
+          <button class="chip oculta" type="button" data-chip-prompt="coche">coche</button>
+          <button class="chip oculta" type="button" data-chip-prompt="tren">tren</button>
+          <button class="chip oculta" type="button" data-chip-prompt="avion">avión</button>
+          <button class="chip oculta" type="button" data-chip-prompt="cometa">cometa</button>
+          <button class="chip oculta" type="button" data-chip-prompt="aerostatico">globo aerostático</button>
+          <button class="chip oculta" type="button" data-chip-prompt="volcan">volcán</button>
+          <button class="chip oculta" type="button" data-chip-prompt="gato en la playa">gato en la playa</button>
+          <button class="chip oculta" type="button" data-chip-prompt="dino en la nieve">dino en la nieve</button>
+          <button class="chip oculta" type="button" data-chip-prompt="robot en el colegio">robot en el colegio</button>
+          <button class="chip oculta" type="button" data-chip-prompt="lobo">lobo</button>
+          <button class="chip oculta" type="button" data-chip-prompt="oso">oso</button>
+          <button class="chip oculta" type="button" data-chip-prompt="cerdito">cerdito</button>
+          <button class="chip oculta" type="button" data-chip-prompt="gallina">gallina</button>
+          <button class="chip oculta" type="button" data-chip-prompt="pato">pato</button>
+          <button class="chip oculta" type="button" data-chip-prompt="raton">ratón</button>
+          <button class="chip oculta" type="button" data-chip-prompt="erizo">erizo</button>
+          <button class="chip oculta" type="button" data-chip-prompt="serpiente">serpiente</button>
+          <button class="chip oculta" type="button" data-chip-prompt="tiburon">tiburón</button>
+          <button class="chip oculta" type="button" data-chip-prompt="medusa">medusa</button>
+          <button class="chip oculta" type="button" data-chip-prompt="mezcla">mezcla</button>
+          <button class="chip oculta" type="button" data-chip-prompt="cumple">cumpleaños</button>
+          <button class="chip oculta" type="button" data-chip-prompt="playa">playa</button>
+          <button class="chip oculta" type="button" data-chip-prompt="espacio">espacio</button>
+          <button class="chip oculta" type="button" data-chip-prompt="colegio">colegio</button>
+          <button class="chip oculta" type="button" data-chip-prompt="halloween">halloween</button>
+          <button class="chip oculta" type="button" data-chip-prompt="navidad">navidad</button>
+          <button class="chip" type="button" data-accion="mas-semillas" aria-expanded="false">+ MÁS SEMILLAS</button>
+        </p>
       </div>
     </div>
-    <p class="semillas" aria-label="Sugerencias">
-      <button class="chip" type="button" data-chip-prompt="gato">gato</button>
-      <button class="chip" type="button" data-chip-prompt="perro">perro</button>
-      <button class="chip" type="button" data-chip-prompt="dino">dino</button>
-      <button class="chip" type="button" data-chip-prompt="robot">robot</button>
-      <button class="chip" type="button" data-chip-prompt="unicornio">unicornio</button>
-      <button class="chip" type="button" data-chip-prompt="ballena">ballena</button>
-      <button class="chip" type="button" data-chip-prompt="tortuga">tortuga</button>
-      <button class="chip" type="button" data-chip-prompt="caracol">caracol</button>
-      <button class="chip oculta" type="button" data-chip-prompt="helado">helado</button>
-      <button class="chip oculta" type="button" data-chip-prompt="monstruo">monstruo</button>
-      <button class="chip oculta" type="button" data-chip-prompt="cohete">cohete</button>
-      <button class="chip oculta" type="button" data-chip-prompt="ovni">ovni</button>
-      <button class="chip oculta" type="button" data-chip-prompt="castillo">castillo</button>
-      <button class="chip oculta" type="button" data-chip-prompt="corona">corona</button>
-      <button class="chip oculta" type="button" data-chip-prompt="globo">globo</button>
-      <button class="chip oculta" type="button" data-chip-prompt="fiesta">fiesta</button>
-      <button class="chip oculta" type="button" data-chip-prompt="estrella">estrella</button>
-      <button class="chip oculta" type="button" data-chip-prompt="arcoiris">arcoíris</button>
-      <button class="chip oculta" type="button" data-chip-prompt="rana">rana</button>
-      <button class="chip oculta" type="button" data-chip-prompt="leon">león</button>
-      <button class="chip oculta" type="button" data-chip-prompt="pinguino">pingüino</button>
-      <button class="chip oculta" type="button" data-chip-prompt="elefante">elefante</button>
-      <button class="chip oculta" type="button" data-chip-prompt="conejo">conejo</button>
-      <button class="chip oculta" type="button" data-chip-prompt="buho">búho</button>
-      <button class="chip oculta" type="button" data-chip-prompt="tarta">tarta</button>
-      <button class="chip oculta" type="button" data-chip-prompt="barco">barco</button>
-      <button class="chip oculta" type="button" data-chip-prompt="molino">molino</button>
-      <button class="chip oculta" type="button" data-chip-prompt="gafas">gafas</button>
-      <button class="chip oculta" type="button" data-chip-prompt="bigote">bigote</button>
-      <button class="chip oculta" type="button" data-chip-prompt="balon">balón</button>
-      <button class="chip oculta" type="button" data-chip-prompt="nina">niña</button>
-      <button class="chip oculta" type="button" data-chip-prompt="princesa">princesa</button>
-      <button class="chip oculta" type="button" data-chip-prompt="pirata">pirata</button>
-      <button class="chip oculta" type="button" data-chip-prompt="bruja">bruja</button>
-      <button class="chip oculta" type="button" data-chip-prompt="fantasma">fantasma</button>
-      <button class="chip oculta" type="button" data-chip-prompt="dragon">dragón</button>
-      <button class="chip oculta" type="button" data-chip-prompt="vaca">vaca</button>
-      <button class="chip oculta" type="button" data-chip-prompt="zorro">zorro</button>
-      <button class="chip oculta" type="button" data-chip-prompt="heroe">superhéroe</button>
-      <button class="chip oculta" type="button" data-chip-prompt="coche">coche</button>
-      <button class="chip oculta" type="button" data-chip-prompt="tren">tren</button>
-      <button class="chip oculta" type="button" data-chip-prompt="avion">avión</button>
-      <button class="chip oculta" type="button" data-chip-prompt="cometa">cometa</button>
-      <button class="chip oculta" type="button" data-chip-prompt="aerostatico">globo aerostático</button>
-      <button class="chip oculta" type="button" data-chip-prompt="volcan">volcán</button>
-      <button class="chip oculta" type="button" data-chip-prompt="gato en la playa">gato en la playa</button>
-      <button class="chip oculta" type="button" data-chip-prompt="dino en la nieve">dino en la nieve</button>
-      <button class="chip oculta" type="button" data-chip-prompt="robot en el colegio">robot en el colegio</button>
-      <button class="chip oculta" type="button" data-chip-prompt="lobo">lobo</button>
-      <button class="chip oculta" type="button" data-chip-prompt="oso">oso</button>
-      <button class="chip oculta" type="button" data-chip-prompt="cerdito">cerdito</button>
-      <button class="chip oculta" type="button" data-chip-prompt="gallina">gallina</button>
-      <button class="chip oculta" type="button" data-chip-prompt="pato">pato</button>
-      <button class="chip oculta" type="button" data-chip-prompt="raton">ratón</button>
-      <button class="chip oculta" type="button" data-chip-prompt="erizo">erizo</button>
-      <button class="chip oculta" type="button" data-chip-prompt="serpiente">serpiente</button>
-      <button class="chip oculta" type="button" data-chip-prompt="tiburon">tiburón</button>
-      <button class="chip oculta" type="button" data-chip-prompt="medusa">medusa</button>
-      <button class="chip oculta" type="button" data-chip-prompt="mezcla">mezcla</button>
-      <button class="chip oculta" type="button" data-chip-prompt="cumple">cumpleaños</button>
-      <button class="chip oculta" type="button" data-chip-prompt="playa">playa</button>
-      <button class="chip oculta" type="button" data-chip-prompt="espacio">espacio</button>
-      <button class="chip oculta" type="button" data-chip-prompt="colegio">colegio</button>
-      <button class="chip oculta" type="button" data-chip-prompt="halloween">halloween</button>
-      <button class="chip oculta" type="button" data-chip-prompt="navidad">navidad</button>
-      <button class="chip" type="button" data-accion="mas-semillas" aria-expanded="false">+ MÁS SEMILLAS</button>
-    </p>
   </section>
 
-  <p class="dia-titulo">HOY</p>
+  <header class="franja-cabecera">
+    <h2 class="franja-nombre"><i class="franja-cuadro" aria-hidden="true"></i>HOY</h2>
+    <p class="franja-meta" data-meta-dia>[ CARGANDO... ]</p>
+  </header>
   <div class="pared pared-dia" data-pared-dia></div>
 
-  <p class="dia-titulo" data-comun-titulo>COMÚN</p>
+  <header class="franja-cabecera" data-comun-titulo>
+    <h2 class="franja-nombre"><i class="franja-cuadro c2" aria-hidden="true"></i>COMÚN</h2>
+    <p class="franja-meta">[ ARCHIVO PÚBLICO COOPERATIVO ]</p>
+  </header>
   <div class="pared pared-comun" data-pared-comun></div>
 
-  <p class="dia-titulo">TU PARED</p>
+  <header class="franja-cabecera">
+    <h2 class="franja-nombre"><i class="franja-cuadro c3" aria-hidden="true"></i>TU PARED</h2>
+    <p class="franja-meta"><span data-meta-pared>[ SLOT MEMORIA: 00 OBJETOS ]</span><span class="orden-linea">ORDEN: <button class="enlace-orden" type="button" data-accion="orden" aria-pressed="false">RECIENTES</button></span></p>
+  </header>
   <div class="pared" data-pared></div>
 
 </main>
 
 <footer class="pie">
   <div class="badges" aria-hidden="true">
-    <span class="badge-88 b1">GARABATO<br>.EXE</span>
-    <span class="badge-88 b2">PIXEL<br>ART</span>
-    <span class="badge-88 b3">SIN<br>COOKIES</span>
-    <span class="badge-88 b4">EN<br>OBRAS</span>
+    <span class="badge-88 b1">GARABATO.EXE</span>
+    <span class="badge-88 b2">PIXEL ART</span>
+    <span class="badge-88 b3">SIN COOKIES</span>
+    <span class="badge-88 b4">EN OBRAS</span>
   </div>
   <pre class="ascii" aria-hidden="true"> .----------------.
  | GARABATO.EXE   |
  | &gt; garabato: ON |
  | &gt; datos: local |
- '----------------'</pre>
-  <p>© <span data-anio>2026</span> GARABATO.EXE · TODO LOCAL, SIN SERVIDOR</p>
-  <p class="nota">MEJOR VISTO A 1024x768</p>
+  '----------------'</pre>
+  <p class="pie-linea">© <span data-anio>2026</span> GARABATO.EXE · TODO LOCAL, SIN SERVIDOR</p>
 </footer>
+
+<div class="barra-estado" aria-hidden="true">
+  <span>[ GARABATO.EXE ]</span>
+  <span>[ &gt; garabato: ON ]</span>
+  <span class="barra-estado-centro">© 2026 GARABATO.EXE — TODO LOCAL, SIN SERVIDOR — MEJOR VISTO A 1024×768</span>
+  <span>$ VISITANTE</span>
+</div>
 
 <script src="js/zetetica.js"></script>
 <script src="js/galeria.js"></script>

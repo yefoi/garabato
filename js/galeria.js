@@ -3625,7 +3625,7 @@
       modos(lienzo, azar);
     }
     enmarcar(lienzo, azar);
-    firmarSellar(ctx, azar);
+    firmarSellar(ctx, azar, registro);
     if (registro.t && registro.t.length) {
       registro.t.forEach(function (capa) {
         if (!capa || !capa.p) {
@@ -3685,6 +3685,10 @@
     $$("[data-total]").forEach(function (nodo) {
       nodo.textContent = texto;
     });
+    var metaPared = $("[data-meta-pared]");
+    if (metaPared) {
+      metaPared.textContent = "[ SLOT MEMORIA: " + ("0" + registros.length).slice(-2) + " OBJETOS ]";
+    }
   };
 
   var melodias = [262, 294, 330, 392, 440, 523, 587, 659];
@@ -3707,6 +3711,18 @@
         window.ZETETICA_SONIDO(Math.round(nota), 0.07);
       }, i * 90);
     });
+  };
+
+  var firmaDe = function (registro) {
+    var azar = sorteador(hash(registro.s + "firma"));
+    var nombre = NOMBRES_FIRMA[Math.floor(azar() * NOMBRES_FIRMA.length)];
+    var edad;
+    if ((registro.m || "n") === "a") {
+      edad = 24 + Math.floor(azar() * 40);
+    } else {
+      edad = 3 + Math.floor(azar() * 7);
+    }
+    return "por " + nombre + ", " + edad + (edad === 1 ? " año" : " años");
   };
 
   var crearTile = function (registro) {
@@ -3752,6 +3768,7 @@
     figura.appendChild(acciones);
     var secreto = buscarSecreto(registro.p);
     var pie = document.createElement("figcaption");
+    pie.className = "pie-tile";
     var marcas = "";
     if (registro.g) {
       marcas += "g" + registro.g + " ";
@@ -3759,7 +3776,14 @@
     if (secreto) {
       marcas += secreto.marca + " ";
     }
-    pie.textContent = marcas + corromper(registro.p, sorteador(hash(registro.s + "pie")));
+    var tituloTile = document.createElement("span");
+    tituloTile.className = "titulo-tile";
+    tituloTile.textContent = marcas + corromper(registro.p, sorteador(hash(registro.s + "pie")));
+    var autorTile = document.createElement("span");
+    autorTile.className = "meta-autor";
+    autorTile.textContent = firmaDe(registro);
+    pie.appendChild(tituloTile);
+    pie.appendChild(autorTile);
     figura.appendChild(pie);
     figura.addEventListener("click", function () {
       if (figura.getAttribute("data-render") !== "1") {
@@ -3885,7 +3909,15 @@
     var giro = (azarGiro() - 0.5) * 5;
     figura.style.transform = "rotate(" + giro.toFixed(2) + "deg)";
     var pie = document.createElement("figcaption");
-    pie.textContent = "hoy :: " + corromper(registro.p, sorteador(hash(registro.s + "pie")));
+    pie.className = "pie-tile";
+    var tituloTile = document.createElement("span");
+    tituloTile.className = "titulo-tile";
+    tituloTile.textContent = "hoy :: " + corromper(registro.p, sorteador(hash(registro.s + "pie")));
+    var autorTile = document.createElement("span");
+    autorTile.className = "meta-autor";
+    autorTile.textContent = firmaDe(registro);
+    pie.appendChild(tituloTile);
+    pie.appendChild(autorTile);
     figura.appendChild(pie);
     figura.addEventListener("click", function () {
       glitch(lienzo, sorteador(hash(registro.s + "clic" + Date.now())), 2);
@@ -3896,18 +3928,24 @@
 
   var pintarDia = function () {
     var capa = $("[data-pared-dia]");
+    var meta = $("[data-meta-dia]");
     if (!capa) {
       return;
     }
     capa.textContent = "";
+    var lista = [];
     try {
-      registrosDia().forEach(function (registro) {
+      lista = registrosDia();
+      lista.forEach(function (registro) {
         capa.appendChild(crearTileDia(registro));
       });
     } catch (error) {
       if (window.console && window.console.error) {
         window.console.error("fallo en dibujos del dia:", error);
       }
+    }
+    if (meta) {
+      meta.textContent = "[ CARGADOS: " + ("0" + lista.length).slice(-2) + " NUEVOS ARTEFACTOS ]";
     }
   };
 
@@ -3964,8 +4002,16 @@
             };
             imagen.src = item.img;
             var pie = document.createElement("figcaption");
+            pie.className = "pie-tile";
             var fechaCorta = (item.f || "").slice(5, 10).replace("-", "/");
-            pie.textContent = (item.p || "sin título") + (fechaCorta ? " · " + fechaCorta : "");
+            var tituloTile = document.createElement("span");
+            tituloTile.className = "titulo-tile";
+            tituloTile.textContent = (item.p || "sin título") + (fechaCorta ? " · " + fechaCorta : "");
+            var autorTile = document.createElement("span");
+            autorTile.className = "meta-autor";
+            autorTile.textContent = firmaDe({ s: item.s || item.p || "comun", m: item.m === "a" ? "a" : "n" });
+            pie.appendChild(tituloTile);
+            pie.appendChild(autorTile);
             figura.appendChild(pie);
             capa.appendChild(figura);
           });
@@ -4782,15 +4828,16 @@
   var NOMBRES_FIRMA = ["Lucía", "Martín", "Paula", "Hugo", "Emma", "Leo", "Vera", "Bruno", "Alba", "Teo", "Nina", "Ciro"];
   var TEXTOS_SELLO = ["MUY BIEN", "REPITE", "NO SE LO CREYÓ NADIE", "GENIAL", "FALTAN DEBERES", "SOBRESALIENTE"];
 
-  var firmarSellar = function (ctx, azar) {
-    if (azar() < 0.4) {
+  var firmarSellar = function (ctx, azar, registro) {
+    if (azar() < 0.4 && registro) {
       ctx.save();
       ctx.translate(L - 5, A - 5);
       ctx.rotate((azar() - 0.5) * 0.16);
-      ctx.font = "11px Schoolbell, cursive";
+      var textoFirma = firmaDe(registro);
+      ctx.font = (textoFirma.length > 17 ? "8px" : "10px") + " Schoolbell, cursive";
       ctx.textAlign = "right";
       ctx.fillStyle = "#243a8a";
-      ctx.fillText("por " + NOMBRES_FIRMA[Math.floor(azar() * NOMBRES_FIRMA.length)] + ", " + (4 + Math.floor(azar() * 6)) + " años", 0, 0);
+      ctx.fillText(textoFirma, 0, 0);
       ctx.restore();
     }
     if (azar() < 0.2) {
@@ -5497,6 +5544,63 @@
   if (botonCamara) {
     botonCamara.addEventListener("click", abrirCamara);
   }
+  var botonPintarron = $("[data-accion='pintarron']");
+  if (botonPintarron) {
+    botonPintarron.addEventListener("click", function () {
+      if (!registros.length) {
+        mostrarVirus("genera algo primero.");
+        return;
+      }
+      abrirEditor(registros[0]);
+    });
+  }
+  var botonIrPared = $("[data-accion='ir-pared']");
+  if (botonIrPared) {
+    botonIrPared.addEventListener("click", function () {
+      var capa = $("[data-pared]");
+      if (capa && capa.scrollIntoView) {
+        capa.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+  var botonHistorial = $("[data-accion='historial']");
+  if (botonHistorial) {
+    botonHistorial.addEventListener("click", function () {
+      var consola = $("[data-accion='consola']");
+      if (consola) {
+        consola.click();
+      }
+    });
+  }
+  var botonHamburguesa = $("[data-accion='menu-abrir']");
+  if (botonHamburguesa) {
+    botonHamburguesa.addEventListener("click", function () {
+      var destino = $("[data-accion='mas']");
+      if (destino) {
+        destino.click();
+      }
+    });
+  }
+  var botonOrden = $("[data-accion='orden']");
+  if (botonOrden) {
+    var ordenFijos = false;
+    botonOrden.addEventListener("click", function () {
+      ordenFijos = !ordenFijos;
+      botonOrden.textContent = ordenFijos ? "FIJOS" : "RECIENTES";
+      botonOrden.setAttribute("aria-pressed", String(ordenFijos));
+      registros.sort(function (a, b) {
+        return (b.pin ? 1 : 0) - (a.pin ? 1 : 0);
+      });
+      pintarTodo();
+      mostrarVirus(ordenFijos ? "orden: fijos primero." : "orden: recientes primero.");
+    });
+  }
+  var espejoCursor = $("[data-cursor]");
+  if (espejoCursor) {
+    document.addEventListener("mousemove", function (evento) {
+      espejoCursor.textContent = ("00" + evento.clientX).slice(-3) + ":" + ("00" + evento.clientY).slice(-3);
+    });
+  }
   crearInterruptor("garabato-tv", "modo-tv", "[data-accion='tv']", "TV");
   crearInterruptor("garabato-ligero", "modo-ligero", "[data-accion='ligero']", "LIGERO");
   crearInterruptor("garabato-contraste", "alto-contraste", "[data-accion='contraste']", "CONTRASTE");
@@ -5553,17 +5657,20 @@
     });
   }
 
-  var botonModo = $("[data-accion='modo']");
+  var botonesModo = $$("[data-accion='modo']");
+  var primerModo = $("[data-accion='modo']");
+  if (primerModo && botonesModo.indexOf(primerModo) < 0) {
+    botonesModo = botonesModo.concat([primerModo]);
+  }
   var pintarModo = function () {
-    if (!botonModo) {
-      return;
-    }
-    botonModo.textContent = modoActual === "a" ? "[ MODO: BOLI ]" : "[ MODO: CRAYÓN ]";
-    botonModo.setAttribute("aria-pressed", String(modoActual === "a"));
+    botonesModo.forEach(function (boton) {
+      boton.textContent = modoActual === "a" ? "[ MODO: BOLI ]" : "[ MODO: CRAYÓN ]";
+      boton.setAttribute("aria-pressed", String(modoActual === "a"));
+    });
   };
   pintarModo();
-  if (botonModo) {
-    botonModo.addEventListener("click", function () {
+  botonesModo.forEach(function (boton) {
+    boton.addEventListener("click", function () {
       modoActual = modoActual === "a" ? "n" : "a";
       try {
         localStorage.setItem("garabato-modo", modoActual);
@@ -5573,7 +5680,7 @@
       pintarModo();
       mostrarVirus(modoActual === "a" ? "modo boli activado." : "modo crayón activado.");
     });
-  }
+  });
 
   $$("[data-chip-prompt]").forEach(function (chip) {
     chip.addEventListener("click", function () {
