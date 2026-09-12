@@ -1,25 +1,19 @@
-export default async function handler(req) {
-  const cors = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type"
-  };
-
-  const json = (datos, estado) =>
-    new Response(JSON.stringify(datos), {
-      status: estado,
-      headers: { ...cors, "Content-Type": "application/json" }
-    });
+export default async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: cors });
+    res.status(204).end();
+    return;
   }
 
   const url = process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
   if (!url || !token) {
-    return json({ ok: false, error: "pared común sin configurar" }, 503);
+    res.status(503).json({ ok: false, error: "pared común sin configurar" });
+    return;
   }
 
   const upstash = async (metodo, ruta, cuerpo) => {
@@ -52,50 +46,54 @@ export default async function handler(req) {
   };
 
   try {
-  if (req.method === "GET") {
-    const prueba = new URL(req.url).searchParams.get("test");
-    if (prueba === "1") {
-      return json({
-        ok: true,
-        url: url ? "configurada" : "falta",
-        token: token ? "configurado" : "falta"
-      }, 200);
-    }
-    const datos = await upstash("GET", "/lrange/pared/0/199");
+    if (req.method === "GET") {
+      if (req.query && req.query.test === "1") {
+        res.status(200).json({ ok: true, url: "configurada", token: "configurado" });
+        return;
+      }
+      const datos = await upstash("GET", "/lrange/pared/0/199");
       const dibujos = (datos.result || [])
         .map(parsear)
         .filter((item) => item && item.p && item.img);
-      return json({ ok: true, dibujos: dibujos }, 200);
+      res.status(200).json({ ok: true, dibujos: dibujos });
+      return;
     }
 
     if (req.method === "POST") {
-      const cuerpo = await req.json().catch(() => null);
-      if (!cuerpo || typeof cuerpo.p !== "string" || typeof cuerpo.s !== "string" || typeof cuerpo.img !== "string") {
-        return json({ ok: false, error: "datos inválidos" }, 400);
+      const cuerpo = req.body || {};
+      if (typeof cuerpo.p !== "string" || typeof cuerpo.s !== "string" || typeof cuerpo.img !== "string") {
+        res.status(400).json({ ok: false, error: "datos inválidos" });
+        return;
       }
       if (cuerpo.img.length > 150000) {
-        return json({ ok: false, error: "imagen demasiado grande" }, 400);
+        res.status(400).json({ ok: false, error: "imagen demasiado grande" });
+        return;
       }
-      const ip = (req.headers.get("x-forwarded-for") || "anonimo").split(",")[0].trim();
+      const ip = String(req.headers["x-forwarded-for"] || "anonimo").split(",")[0].trim();
       const claveLimite = "limite:" + ip;
       const intento = await upstash("GET", "/get/" + claveLimite);
       if (intento.result) {
-        return json({ ok: false, error: "ya publicaste hoy. vuelve mañana." }, 429);
+        res.status(429).json({ ok: false, error: "ya publicaste hoy. vuelve mañana." });
+        return;
       }
       await upstash("POST", "/setex/" + claveLimite + "/86400", "1");
-      const registro = {
+      await upstash("POST", "/rpush/pared", {
         p: cuerpo.p.slice(0, 60),
         s: cuerpo.s.slice(0, 120),
         m: cuerpo.m === "a" ? "a" : "n",
         img: cuerpo.img,
         f: new Date().toISOString()
-      };
-      await upstash("POST", "/rpush/pared", registro);
-      return json({ ok: true }, 200);
+      });
+      res.status(200).json({ ok: true });
+      return;
     }
 
-    return json({ ok: false, error: "método no soportado" }, 405);
+    res.status(405).json({ ok: false, error: "método no soportado" });
   } catch (error) {
-    return json({ ok: false, error: "servicio temporalmente caído", detalle: String((error && error.message) || error) }, 502);
+    res.status(502).json({
+      ok: false,
+      error: "servicio temporalmente caído",
+      detalle: String((error && error.message) || error)
+    });
   }
 }
