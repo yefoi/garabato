@@ -4273,47 +4273,173 @@
       return;
     }
     forzarRenderTodo();
-    var cols = 6;
-    var hueco = 132;
-    var separacion = 10;
-    var alturaPie = 18;
-    var filas = Math.ceil(registros.length / cols);
-    var ancho = cols * (hueco + separacion) + separacion;
-    var alto = filas * (hueco + alturaPie + separacion) + separacion + 26;
-    var salida = document.createElement("canvas");
-    salida.width = ancho;
-    salida.height = alto;
-    var ctxSalida = salida.getContext("2d");
-    ctxSalida.fillStyle = "#07070d";
-    ctxSalida.fillRect(0, 0, ancho, alto);
-    ctxSalida.fillStyle = "#b6ff3b";
-    ctxSalida.font = "13px \"Press Start 2P\", monospace";
-    ctxSalida.fillText("GARABATO.EXE :: PARED DE DIBUJOS", 10, 20);
-    var lienzos = $$("canvas", pared);
-    lienzos.forEach(function (lienzo, i) {
-      var cx = i % cols;
-      var cy = Math.floor(i / cols);
-      var x = separacion + cx * (hueco + separacion) + Math.round((hueco - lienzo.width) / 2);
-      var y = 26 + separacion + cy * (hueco + alturaPie + separacion) + Math.round((hueco - lienzo.height) / 2);
-      ctxSalida.drawImage(lienzo, x, y);
-      ctxSalida.fillStyle = "#d8d8ea";
-      ctxSalida.font = "12px \"Schoolbell\", cursive";
-      var titulo = registros[i] ? registros[i].p : "";
-      if (titulo.length > 16) {
-        titulo = titulo.slice(0, 15) + "…";
-      }
-      ctxSalida.fillText(titulo, separacion + cx * (hueco + separacion), y + lienzo.height + 13);
+    var esperar = function (hecho) {
+      var intentos = 0;
+      var comprobar = function () {
+        var listo = true;
+        $$("figure", pared).forEach(function (figura) {
+          if (figura.getAttribute("data-render") !== "1") {
+            listo = false;
+          }
+        });
+        if (listo || intentos > 40) {
+          hecho();
+          return;
+        }
+        intentos += 1;
+        window.setTimeout(comprobar, 120);
+      };
+      comprobar();
+    };
+    esperar(function () {
+      var cols = 6;
+      var hueco = 132;
+      var separacion = 10;
+      var alturaPie = 18;
+      var filas = Math.ceil(registros.length / cols);
+      var ancho = cols * (hueco + separacion) + separacion;
+      var alto = filas * (hueco + alturaPie + separacion) + separacion + 26;
+      var salida = document.createElement("canvas");
+      salida.width = ancho;
+      salida.height = alto;
+      var ctxSalida = salida.getContext("2d");
+      ctxSalida.fillStyle = "#07070d";
+      ctxSalida.fillRect(0, 0, ancho, alto);
+      ctxSalida.fillStyle = "#b6ff3b";
+      ctxSalida.font = "13px \"Press Start 2P\", monospace";
+      ctxSalida.fillText("GARABATO.EXE :: PARED DE DIBUJOS", 10, 20);
+      var lienzos = $$("canvas", pared);
+      lienzos.forEach(function (lienzo, i) {
+        var cx = i % cols;
+        var cy = Math.floor(i / cols);
+        var x = separacion + cx * (hueco + separacion) + Math.round((hueco - lienzo.width) / 2);
+        var y = 26 + separacion + cy * (hueco + alturaPie + separacion) + Math.round((hueco - lienzo.height) / 2);
+        ctxSalida.drawImage(lienzo, x, y);
+        ctxSalida.fillStyle = "#d8d8ea";
+        ctxSalida.font = "12px \"Schoolbell\", cursive";
+        var titulo = registros[i] ? registros[i].p : "";
+        if (titulo.length > 16) {
+          titulo = titulo.slice(0, 15) + "…";
+        }
+        ctxSalida.fillText(titulo, separacion + cx * (hueco + separacion), y + lienzo.height + 13);
+      });
+      var enlace = document.createElement("a");
+      enlace.download = "pared-de-dibujos.png";
+      enlace.href = salida.toDataURL("image/png");
+      enlace.click();
     });
-    var enlace = document.createElement("a");
-    enlace.download = "pared-de-dibujos.png";
-    enlace.href = salida.toDataURL("image/png");
-    enlace.click();
   };
 
   var cacheDibujos = {};
   var colaRender = [];
   var loteEnCurso = false;
   var modoLimpio = false;
+  var baseDatos = null;
+
+  var iniciarImagenes = function () {
+    try {
+      if (!window.indexedDB) {
+        return;
+      }
+      var peticion = window.indexedDB.open("garabato-db", 1);
+      peticion.onupgradeneeded = function () {
+        if (!peticion.result.objectStoreNames.contains("dibujos")) {
+          peticion.result.createObjectStore("dibujos", { keyPath: "s" });
+        }
+      };
+      peticion.onsuccess = function () {
+        baseDatos = peticion.result;
+      };
+      peticion.onerror = function () {
+        baseDatos = null;
+      };
+    } catch (error) {
+      baseDatos = null;
+    }
+  };
+
+  var guardarImagen = function (registro, lienzo) {
+    try {
+      if (!baseDatos) {
+        return;
+      }
+      var tx = baseDatos.transaction("dibujos", "readwrite");
+      tx.objectStore("dibujos").put({ s: registro.s, d: lienzo.toDataURL("image/png") });
+    } catch (error) {
+      return;
+    }
+  };
+
+  var imagenGuardada = function (registro, hecho) {
+    if (!baseDatos) {
+      hecho(null);
+      return;
+    }
+    try {
+      var tx = baseDatos.transaction("dibujos", "readonly");
+      var consulta = tx.objectStore("dibujos").get(registro.s);
+      consulta.onsuccess = function () {
+        hecho(consulta.result ? consulta.result.d : null);
+      };
+      consulta.onerror = function () {
+        hecho(null);
+      };
+    } catch (error) {
+      hecho(null);
+    }
+  };
+
+  var usarImagen = function (lienzo, dataUrl, hecho) {
+    try {
+      var imagen = new window.Image();
+      imagen.onload = function () {
+        lienzo.getContext("2d").drawImage(imagen, 0, 0);
+        hecho(true);
+      };
+      imagen.onerror = function () {
+        hecho(false);
+      };
+      imagen.src = dataUrl;
+    } catch (error) {
+      hecho(false);
+    }
+  };
+
+  var renderProcedural = function (tarea) {
+    var resultado = cacheDibujos[tarea.registro.s];
+    if (!resultado) {
+      resultado = pintarDibujo(tarea.registro);
+      cacheDibujos[tarea.registro.s] = resultado;
+    }
+    aplicarResultado(tarea.figura, resultado);
+    guardarImagen(tarea.registro, resultado.lienzo);
+  };
+
+  var renderTarea = function (tarea) {
+    if (typeof document.body.contains === "function" && !document.body.contains(tarea.figura)) {
+      return;
+    }
+    if (tarea.figura.getAttribute("data-render") === "1") {
+      return;
+    }
+    imagenGuardada(tarea.registro, function (dataUrl) {
+      var lienzo = tarea.figura.querySelector("canvas");
+      if (!dataUrl || !lienzo) {
+        renderProcedural(tarea);
+        return;
+      }
+      usarImagen(lienzo, dataUrl, function (ok) {
+        if (!ok) {
+          renderProcedural(tarea);
+          return;
+        }
+        var resultado = { lienzo: lienzo, perdido: false, secreto: buscarSecreto(tarea.registro.p) };
+        cacheDibujos[tarea.registro.s] = resultado;
+        tarea.figura.__resultado = resultado;
+        tarea.figura.setAttribute("data-render", "1");
+      });
+    });
+  };
 
   var programarRender = function (figura, registro) {
     figura.setAttribute("data-render", "0");
@@ -4349,17 +4475,7 @@
       return;
     }
     var lote = colaRender.splice(0, 8);
-    lote.forEach(function (tarea) {
-      if (typeof document.body.contains === "function" && !document.body.contains(tarea.figura)) {
-        return;
-      }
-      var resultado = cacheDibujos[tarea.registro.s];
-      if (!resultado) {
-        resultado = pintarDibujo(tarea.registro);
-        cacheDibujos[tarea.registro.s] = resultado;
-      }
-      aplicarResultado(tarea.figura, resultado);
-    });
+    lote.forEach(renderTarea);
     window.setTimeout(procesoLotes, 16);
   };
 
@@ -4380,9 +4496,7 @@
       if (!registro) {
         return;
       }
-      var resultado = cacheDibujos[registro.s] || pintarDibujo(registro);
-      cacheDibujos[registro.s] = resultado;
-      aplicarResultado(figura, resultado);
+      renderTarea({ figura: figura, registro: registro });
     });
   };
 
@@ -4394,6 +4508,7 @@
         var resultado = pintarDibujo(registro);
         cacheDibujos[registro.s] = resultado;
         aplicarResultado(figura, resultado);
+        guardarImagen(registro, resultado.lienzo);
       }
     });
   };
@@ -5270,6 +5385,7 @@
       pintarTodo();
     });
   }
+  iniciarImagenes();
   pintarSellos();
   pintarTodo();
 

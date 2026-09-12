@@ -54,6 +54,7 @@ GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se s
 - **Compartir la pared por URL** (sin servidor) y **exportar/importar** la colección en JSON.
 - **Descargar póster PNG** con toda la pared y **grabar la corrupción** en vídeo si el navegador lo permite.
 - Modos **TV**, **ligero** y **alto contraste**, sonido 8-bit opcional y consola de comandos.
+- **Persistencia**: las semillas se guardan en `localStorage` y cada dibujo generado se guarda también como imagen (PNG en IndexedDB), así la pared se conserva tal cual aunque cambie el motor.
 
 ## Controles
 
