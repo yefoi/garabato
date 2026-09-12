@@ -3931,11 +3931,18 @@
         return respuesta.json();
       })
       .then(function (datos) {
-        if (!datos || !datos.ok || !Array.isArray(datos.dibujos) || !datos.dibujos.length) {
+        if (!datos || !datos.ok || !Array.isArray(datos.dibujos)) {
           ocultar();
           return;
         }
         capa.textContent = "";
+        if (!datos.dibujos.length) {
+          var vacio = document.createElement("p");
+          vacio.className = "comun-vacio";
+          vacio.textContent = "sin publicaciones todavía. abre un dibujo con Z y pulsa PUBLICAR.";
+          capa.appendChild(vacio);
+          return;
+        }
         try {
           datos.dibujos.reverse().forEach(function (item) {
             if (!item || !item.img) {
@@ -5613,6 +5620,9 @@
   pintarTodo();
   pintarDia();
   pintarComun();
+  if ($("[data-pared-comun]")) {
+    window.setInterval(pintarComun, 60000);
+  }
 
   window.ZETETICA = {
     generar: agregarGeneracion,

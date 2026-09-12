@@ -2354,3 +2354,10 @@ html.alto-contraste body::after {
   box-shadow: 0 0 0 3px var(--fondo);
   z-index: 4;
 }
+.comun-vacio {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--term);
+  font-size: 1.4rem;
+  color: var(--texto-2);
+}
