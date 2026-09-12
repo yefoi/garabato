@@ -52,8 +52,16 @@ export default async function handler(req) {
   };
 
   try {
-    if (req.method === "GET") {
-      const datos = await upstash("GET", "/lrange/pared/0/199");
+  if (req.method === "GET") {
+    const prueba = new URL(req.url).searchParams.get("test");
+    if (prueba === "1") {
+      return json({
+        ok: true,
+        url: url ? "configurada" : "falta",
+        token: token ? "configurado" : "falta"
+      }, 200);
+    }
+    const datos = await upstash("GET", "/lrange/pared/0/199");
       const dibujos = (datos.result || [])
         .map(parsear)
         .filter((item) => item && item.p && item.img);
