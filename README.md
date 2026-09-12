@@ -64,6 +64,18 @@ GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se s
 - Consola: `generar <texto>`, `suerte`, `glitch`, `limpiar`, `bajar`, `caos`, `crt`, `sonido`, `ayuda`.
 - Los botones menos usados viven en **MÁS OPCIONES**, agrupados en PARED, JUEGO y PANTALLA.
 
+## Pared común (opcional, requiere servidor)
+
+La franja COMÚN muestra dibujos publicados por otros visitantes. Para activarla hace falta un backend mínimo:
+
+1. En Vercel: añade las variables `UPSTASH_REDIS_REST_URL` y `UPSTASH_REDIS_REST_TOKEN` (de tu base de datos Upstash Redis) y redespliega.
+2. La función `api/pared.js` expone:
+   - `GET /api/pared` — devuelve los últimos 200 dibujos publicados.
+   - `POST /api/pared` — publica un dibujo (imagen PNG, prompt y semilla). Límite: 1 publicación al día por IP.
+3. En el sitio, el botón PUBLICAR del zoom envía el dibujo a la pared común.
+
+Sin variables configuradas, la franja COMÚN se oculta y el resto del sitio sigue funcionando estático.
+
 ## Cómo funciona por dentro
 
 - Cada dibujo es un canvas de 96×120 píxeles escalado con `image-rendering: pixelated`.

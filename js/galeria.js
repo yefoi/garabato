@@ -3892,6 +3892,60 @@
     });
   };
 
+  var pintarComun = function () {
+    var capa = $("[data-pared-comun]");
+    var titulo = $("[data-comun-titulo]");
+    if (!capa) {
+      return;
+    }
+    var ocultar = function () {
+      if (titulo) {
+        titulo.style.display = "none";
+      }
+      capa.style.display = "none";
+    };
+    fetch("/api/pared")
+      .then(function (respuesta) {
+        if (!respuesta.ok) {
+          throw new Error("sin pared común");
+        }
+        return respuesta.json();
+      })
+      .then(function (datos) {
+        if (!datos || !datos.ok || !Array.isArray(datos.dibujos) || !datos.dibujos.length) {
+          ocultar();
+          return;
+        }
+        capa.textContent = "";
+        datos.dibujos.reverse().forEach(function (item) {
+          if (!item || !item.img) {
+            return;
+          }
+          var figura = document.createElement("figure");
+          figura.className = "dibujo comun";
+          figura.title = item.p || "sin título";
+          var lienzo = document.createElement("canvas");
+          lienzo.width = 96;
+          lienzo.height = 120;
+          lienzo.setAttribute("aria-label", item.p || "");
+          figura.appendChild(lienzo);
+          var imagen = new window.Image();
+          imagen.onload = function () {
+            lienzo.width = imagen.naturalWidth;
+            lienzo.height = imagen.naturalHeight;
+            lienzo.getContext("2d").drawImage(imagen, 0, 0);
+          };
+          imagen.src = item.img;
+          var pie = document.createElement("figcaption");
+          var fechaCorta = (item.f || "").slice(5, 10).replace("-", "/");
+          pie.textContent = (item.p || "sin título") + (fechaCorta ? " · " + fechaCorta : "");
+          figura.appendChild(pie);
+          capa.appendChild(figura);
+        });
+      })
+      .catch(ocultar);
+  };
+
   var nuevaSemilla = function (prompt) {
     return prompt + "#" + Math.random().toString(36).slice(2, 10);
   };
@@ -4993,7 +5047,7 @@
       var capa = document.createElement("div");
       capa.className = "modal";
       capa.setAttribute("aria-hidden", "true");
-      capa.innerHTML = "<div class=\"modal-marco\"><div class=\"modal-barra\"><span data-zoom-titulo>DIBUJO</span><button class=\"t-salir\" type=\"button\" data-zoom-cerrar>[ CERRAR ]</button></div><div class=\"modal-cuerpo\"><div class=\"zoom-escena\"><canvas width=\"384\" height=\"480\" data-zoom-lienzo></canvas></div><p class=\"ficha-zoom\" data-zoom-ficha></p><div class=\"controles\"><button class=\"boton claro\" type=\"button\" data-zoom-limpio>VER LIMPIO</button><button class=\"boton\" type=\"button\" data-zoom-png>GUARDAR PNG</button></div></div></div>";
+      capa.innerHTML = "<div class=\"modal-marco\"><div class=\"modal-barra\"><span data-zoom-titulo>DIBUJO</span><button class=\"t-salir\" type=\"button\" data-zoom-cerrar>[ CERRAR ]</button></div><div class=\"modal-cuerpo\"><div class=\"zoom-escena\"><canvas width=\"384\" height=\"480\" data-zoom-lienzo></canvas></div><p class=\"ficha-zoom\" data-zoom-ficha></p><div class=\"controles\"><button class=\"boton claro\" type=\"button\" data-zoom-limpio>VER LIMPIO</button><button class=\"boton claro\" type=\"button\" data-zoom-publicar>PUBLICAR</button><button class=\"boton\" type=\"button\" data-zoom-png>GUARDAR PNG</button></div></div></div>";
       document.body.appendChild(capa);
       zoom = {
         capa: capa,
@@ -5017,6 +5071,38 @@
         enlace.download = "garabato-" + (zoom.registro.s || "").split("#")[1] + ".png";
         enlace.href = zoom.lienzo.toDataURL("image/png");
         enlace.click();
+      });
+      capa.querySelector("[data-zoom-publicar]").addEventListener("click", function () {
+        var registro = zoom.registro;
+        if (!registro) {
+          return;
+        }
+        fetch("/api/pared", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            p: registro.p,
+            s: registro.s,
+            m: registro.m || "n",
+            img: zoom.lienzo.toDataURL("image/png")
+          })
+        })
+          .then(function (respuesta) {
+            return respuesta.json();
+          })
+          .then(function (datos) {
+            if (datos && datos.ok) {
+              mostrarVirus("publicado en la pared común.");
+              pintarComun();
+            } else if (datos && datos.error) {
+              mostrarVirus(datos.error);
+            } else {
+              mostrarVirus("no se pudo publicar.");
+            }
+          })
+          .catch(function () {
+            mostrarVirus("sin conexión con la pared común.");
+          });
       });
     }
     zoom.registro = registro;
@@ -5462,6 +5548,7 @@
   pintarSellos();
   pintarTodo();
   pintarDia();
+  pintarComun();
 
   window.ZETETICA = {
     generar: agregarGeneracion,
