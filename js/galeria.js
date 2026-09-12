@@ -3887,9 +3887,15 @@
       return;
     }
     capa.textContent = "";
-    registrosDia().forEach(function (registro) {
-      capa.appendChild(crearTileDia(registro));
-    });
+    try {
+      registrosDia().forEach(function (registro) {
+        capa.appendChild(crearTileDia(registro));
+      });
+    } catch (error) {
+      if (window.console && window.console.error) {
+        window.console.error("fallo en dibujos del dia:", error);
+      }
+    }
   };
 
   var pintarComun = function () {
@@ -3917,31 +3923,35 @@
           return;
         }
         capa.textContent = "";
-        datos.dibujos.reverse().forEach(function (item) {
-          if (!item || !item.img) {
-            return;
-          }
-          var figura = document.createElement("figure");
-          figura.className = "dibujo comun";
-          figura.title = item.p || "sin título";
-          var lienzo = document.createElement("canvas");
-          lienzo.width = 96;
-          lienzo.height = 120;
-          lienzo.setAttribute("aria-label", item.p || "");
-          figura.appendChild(lienzo);
-          var imagen = new window.Image();
-          imagen.onload = function () {
-            lienzo.width = imagen.naturalWidth;
-            lienzo.height = imagen.naturalHeight;
-            lienzo.getContext("2d").drawImage(imagen, 0, 0);
-          };
-          imagen.src = item.img;
-          var pie = document.createElement("figcaption");
-          var fechaCorta = (item.f || "").slice(5, 10).replace("-", "/");
-          pie.textContent = (item.p || "sin título") + (fechaCorta ? " · " + fechaCorta : "");
-          figura.appendChild(pie);
-          capa.appendChild(figura);
-        });
+        try {
+          datos.dibujos.reverse().forEach(function (item) {
+            if (!item || !item.img) {
+              return;
+            }
+            var figura = document.createElement("figure");
+            figura.className = "dibujo comun";
+            figura.title = item.p || "sin título";
+            var lienzo = document.createElement("canvas");
+            lienzo.width = 96;
+            lienzo.height = 120;
+            lienzo.setAttribute("aria-label", item.p || "");
+            figura.appendChild(lienzo);
+            var imagen = new window.Image();
+            imagen.onload = function () {
+              lienzo.width = imagen.naturalWidth;
+              lienzo.height = imagen.naturalHeight;
+              lienzo.getContext("2d").drawImage(imagen, 0, 0);
+            };
+            imagen.src = item.img;
+            var pie = document.createElement("figcaption");
+            var fechaCorta = (item.f || "").slice(5, 10).replace("-", "/");
+            pie.textContent = (item.p || "sin título") + (fechaCorta ? " · " + fechaCorta : "");
+            figura.appendChild(pie);
+            capa.appendChild(figura);
+          });
+        } catch (error) {
+          ocultar();
+        }
       })
       .catch(ocultar);
   };
@@ -4516,19 +4526,12 @@
     }
   };
 
-  var usarImagen = function (lienzo, dataUrl, hecho) {
-    try {
-      var imagen = new window.Image();
-      imagen.onload = function () {
-        lienzo.getContext("2d").drawImage(imagen, 0, 0);
-        hecho(true);
-      };
-      imagen.onerror = function () {
-        hecho(false);
-      };
-      imagen.src = dataUrl;
-    } catch (error) {
-      hecho(false);
+  var marcarFallida = function (tarea) {
+    if (tarea.figura) {
+      tarea.figura.setAttribute("data-render", "1");
+      if (tarea.figura.className.indexOf("perdido") === -1) {
+        tarea.figura.className += " perdido";
+      }
     }
   };
 
@@ -4549,22 +4552,41 @@
     if (tarea.figura.getAttribute("data-render") === "1") {
       return;
     }
+    var med = medidasDe(tarea.registro);
     imagenGuardada(tarea.registro, function (dataUrl) {
       var lienzo = tarea.figura.querySelector("canvas");
       if (!dataUrl || !lienzo) {
-        renderProcedural(tarea);
+        try {
+          renderProcedural(tarea);
+        } catch (error) {
+          marcarFallida(tarea);
+        }
         return;
       }
-      usarImagen(lienzo, dataUrl, function (ok) {
-        if (!ok) {
-          renderProcedural(tarea);
-          return;
+      var imagen = new window.Image();
+      imagen.onload = function () {
+        if (imagen.naturalWidth === med.w && imagen.naturalHeight === med.h) {
+          lienzo.getContext("2d").drawImage(imagen, 0, 0);
+          var resultado = { lienzo: lienzo, perdido: false, secreto: buscarSecreto(tarea.registro.p) };
+          cacheDibujos[tarea.registro.s] = resultado;
+          tarea.figura.__resultado = resultado;
+          tarea.figura.setAttribute("data-render", "1");
+        } else {
+          try {
+            renderProcedural(tarea);
+          } catch (error) {
+            marcarFallida(tarea);
+          }
         }
-        var resultado = { lienzo: lienzo, perdido: false, secreto: buscarSecreto(tarea.registro.p) };
-        cacheDibujos[tarea.registro.s] = resultado;
-        tarea.figura.__resultado = resultado;
-        tarea.figura.setAttribute("data-render", "1");
-      });
+      };
+      imagen.onerror = function () {
+        try {
+          renderProcedural(tarea);
+        } catch (error) {
+          marcarFallida(tarea);
+        }
+      };
+      imagen.src = dataUrl;
     });
   };
 
@@ -4602,7 +4624,16 @@
       return;
     }
     var lote = colaRender.splice(0, 8);
-    lote.forEach(renderTarea);
+    lote.forEach(function (tarea) {
+      try {
+        renderTarea(tarea);
+      } catch (error) {
+        if (window.console && window.console.error) {
+          window.console.error("render fallido:", tarea.registro && tarea.registro.s, error);
+        }
+        marcarFallida(tarea);
+      }
+    });
     window.setTimeout(procesoLotes, 16);
   };
 
@@ -4623,7 +4654,11 @@
       if (!registro) {
         return;
       }
-      renderTarea({ figura: figura, registro: registro });
+      try {
+        renderTarea({ figura: figura, registro: registro });
+      } catch (error) {
+        marcarFallida({ figura: figura, registro: registro });
+      }
     });
   };
 
@@ -4682,10 +4717,14 @@
     }
     var indice = 0;
     hervires[clave] = window.setInterval(function () {
-      indice = (indice + 1) % cuadros.length;
-      var ctx = lienzo.getContext("2d");
-      ctx.clearRect(0, 0, lienzo.width, lienzo.height);
-      ctx.drawImage(cuadros[indice], 0, 0);
+      try {
+        indice = (indice + 1) % cuadros.length;
+        var ctx = lienzo.getContext("2d");
+        ctx.clearRect(0, 0, lienzo.width, lienzo.height);
+        ctx.drawImage(cuadros[indice], 0, 0);
+      } catch (error) {
+        return;
+      }
     }, 260);
   };
 
