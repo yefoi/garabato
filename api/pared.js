@@ -23,14 +23,20 @@ export default async function handler(req) {
   }
 
   const upstash = async (metodo, ruta, cuerpo) => {
+    const controlador = new AbortController();
+    const temporizador = setTimeout(function () {
+      controlador.abort();
+    }, 8000);
     const respuesta = await fetch(url + ruta, {
       method: metodo,
       headers: {
         Authorization: "Bearer " + token,
         ...(cuerpo !== undefined ? { "Content-Type": "application/json" } : {})
       },
-      body: cuerpo !== undefined ? JSON.stringify(cuerpo) : undefined
+      body: cuerpo !== undefined ? JSON.stringify(cuerpo) : undefined,
+      signal: controlador.signal
     });
+    clearTimeout(temporizador);
     if (!respuesta.ok) {
       throw new Error("upstash " + respuesta.status);
     }
@@ -82,6 +88,6 @@ export default async function handler(req) {
 
     return json({ ok: false, error: "método no soportado" }, 405);
   } catch (error) {
-    return json({ ok: false, error: "servicio temporalmente caído" }, 502);
+    return json({ ok: false, error: "servicio temporalmente caído", detalle: String((error && error.message) || error) }, 502);
   }
 }
