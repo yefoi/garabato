@@ -3819,6 +3819,79 @@
     actualizarTotales();
   };
 
+  var fechaISO = function () {
+    var hoy = new Date();
+    var mes = ("0" + (hoy.getMonth() + 1)).slice(-2);
+    var dia = ("0" + hoy.getDate()).slice(-2);
+    return hoy.getFullYear() + "-" + mes + "-" + dia;
+  };
+
+  var registrosDia = function () {
+    var semilla = "garabato-global-" + fechaISO();
+    var azar = sorteador(hash(semilla));
+    var cantidad = 2 + Math.floor(azar() * 2);
+    var lista = [];
+    var temporada = temporadaActual();
+    for (var i = 0; i < cantidad; i++) {
+      var sujeto = CATALOGO[Math.floor(azar() * CATALOGO.length)];
+      var frases = [sujeto.titulo];
+      if (azar() < 0.35) {
+        var accesorio = ACCESORIOS[Math.floor(azar() * ACCESORIOS.length)];
+        frases.push("y " + accesorio.claves[0]);
+      }
+      var escenaDia = null;
+      if (temporada && azar() < 0.3) {
+        escenaDia = temporada;
+      }
+      lista.push({
+        p: frases.join(" "),
+        s: semilla + "#" + i,
+        n: 1,
+        m: "n",
+        e: escenaDia
+      });
+    }
+    return lista;
+  };
+
+  var crearTileDia = function (registro) {
+    var med = medidasDe(registro);
+    var resultado = pintarDibujo(registro);
+    var figura = document.createElement("figure");
+    figura.className = "dibujo dia";
+    figura.setAttribute("data-seg", registro.s);
+    figura.title = registro.p + " // dibujo del dia";
+    var lienzo = document.createElement("canvas");
+    lienzo.width = med.w;
+    lienzo.height = med.h;
+    lienzo.setAttribute("aria-label", registro.p);
+    var ctx = lienzo.getContext("2d");
+    ctx.drawImage(resultado.lienzo, 0, 0);
+    figura.appendChild(lienzo);
+    var azarGiro = sorteador(hash(registro.s + "giro"));
+    var giro = (azarGiro() - 0.5) * 5;
+    figura.style.transform = "rotate(" + giro.toFixed(2) + "deg)";
+    var pie = document.createElement("figcaption");
+    pie.textContent = "hoy :: " + corromper(registro.p, sorteador(hash(registro.s + "pie")));
+    figura.appendChild(pie);
+    figura.addEventListener("click", function () {
+      glitch(lienzo, sorteador(hash(registro.s + "clic" + Date.now())), 2);
+      bleepMini();
+    });
+    return figura;
+  };
+
+  var pintarDia = function () {
+    var capa = $("[data-pared-dia]");
+    if (!capa) {
+      return;
+    }
+    capa.textContent = "";
+    registrosDia().forEach(function (registro) {
+      capa.appendChild(crearTileDia(registro));
+    });
+  };
+
   var nuevaSemilla = function (prompt) {
     return prompt + "#" + Math.random().toString(36).slice(2, 10);
   };
@@ -5388,6 +5461,7 @@
   iniciarImagenes();
   pintarSellos();
   pintarTodo();
+  pintarDia();
 
   window.ZETETICA = {
     generar: agregarGeneracion,

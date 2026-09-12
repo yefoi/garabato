@@ -45,6 +45,7 @@ GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se s
 - **Modo mezcla**: dos estilos conviviendo en la misma hoja, mitad crayón y mitad boli.
 - **Escenas temáticas**: cumpleaños, playa, espacio, colegio, halloween y navidad, con varias piezas por escena.
 - **Temporada automática**: algunos dibujos salen con motivos de la estación según la fecha (35% de probabilidad).
+- **El dibujo del día**: cada fecha deriva 2-3 dibujos propios; todos los visitantes de ese día ven los mismos, sin servidor.
 - **18 accesorios**, 14 fondos, 6 climas, 4 marcos, 6 tintes × 5 modos de color, espejo horizontal, rótulo manuscrito con letra escolar, firmas («por Lucía, 7 años») y sellos de profesor.
 - **Corrupción de escáner roto**: datamosh, canales RGB desplazados, pixel sort, bloques permutados y ruido de píxeles.
 - **Linaje**: mutar un dibujo engendra variantes con generación (`g1`, `g2`…) y padre registrado.

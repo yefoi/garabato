@@ -2299,3 +2299,35 @@ html.alto-contraste body::after {
 .contador-visitas .sellos { margin-left: 8px; }
 
 .contador-visitas .sellos span { width: 8px; height: 8px; }
+
+.dia-titulo {
+  margin: 1.8rem 0 0.5rem;
+  font-family: var(--pixel);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--neon-2);
+}
+
+.pared-dia {
+  padding-top: 0.6rem;
+  margin-bottom: 0.6rem;
+  border-bottom: 3px dotted var(--linea);
+  padding-bottom: 1rem;
+}
+
+.dibujo.dia canvas {
+  border-color: var(--neon-2);
+  box-shadow: 6px 6px 0 0 rgba(0, 255, 225, 0.3);
+}
+
+.dibujo.dia::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 12px;
+  height: 12px;
+  background: var(--neon-2);
+  box-shadow: 0 0 0 3px var(--fondo);
+  z-index: 4;
+}
