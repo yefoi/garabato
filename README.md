@@ -24,7 +24,7 @@ GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se s
 
 ![Zoom de un dibujo](img/zoom.png)
 
-![Modo adultos](img/adultos.png)
+![Modo boli](img/adultos.png)
 
 ![Escenas](img/escenas.png)
 
@@ -41,7 +41,7 @@ GARABATO.EXE es un experimento de arte generativo y net.art. Los dibujos no se s
 - **8 perfiles de trazo**: niño pequeño, aplicado, cansado, nervioso, zurdo, pulcro, coloreador y minimalista. Cambian temblor, grosor, presión y densidad de relleno de todos los dibujos.
 - **6 papeles**: clásico, cartulina de color, folio arrugado, hoja de examen, servilleta y hoja de cómic.
 - **3 formatos**: vertical, apaisado y cuadrado, que rompen la cuadrícula de la pared.
-- **Dos modos**: NIÑOS (crayón, colores, fondos y firmas) y ADULTOS (boli azul sobre papel de cuaderno: línea suelta, garabatos de aburrimiento, listas tachadas y texto ilegible). El modo se guarda en cada dibujo.
+- **Dos modos**: CRAYÓN (dibujos de niños: cera de colores, fondos y firmas) y BOLI (dibujos de adultos: boli azul sobre papel de cuaderno, línea suelta, garabatos de aburrimiento, listas tachadas y texto ilegible). El modo se guarda en cada dibujo.
 - **Modo mezcla**: dos estilos conviviendo en la misma hoja, mitad crayón y mitad boli.
 - **Escenas temáticas**: cumpleaños, playa, espacio, colegio, halloween y navidad, con varias piezas por escena.
 - **Temporada automática**: algunos dibujos salen con motivos de la estación según la fecha (35% de probabilidad).

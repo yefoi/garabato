@@ -5558,7 +5558,7 @@
     if (!botonModo) {
       return;
     }
-    botonModo.textContent = modoActual === "a" ? "[ MODO: ADULTOS ]" : "[ MODO: NIÑOS ]";
+    botonModo.textContent = modoActual === "a" ? "[ MODO: BOLI ]" : "[ MODO: CRAYÓN ]";
     botonModo.setAttribute("aria-pressed", String(modoActual === "a"));
   };
   pintarModo();
@@ -5571,7 +5571,7 @@
         return;
       }
       pintarModo();
-      mostrarVirus(modoActual === "a" ? "modo adultos activado." : "modo niños activado.");
+      mostrarVirus(modoActual === "a" ? "modo boli activado." : "modo crayón activado.");
     });
   }
 
