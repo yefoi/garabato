@@ -3762,7 +3762,24 @@
     pie.textContent = marcas + corromper(registro.p, sorteador(hash(registro.s + "pie")));
     figura.appendChild(pie);
     figura.addEventListener("click", function () {
-      glitch(lienzo, sorteador(hash(registro.s + "clic" + Date.now())), 2);
+      if (figura.getAttribute("data-render") !== "1") {
+        return;
+      }
+      var veces = clicsGlitch[registro.s] || 0;
+      veces += 1;
+      if (veces >= 3) {
+        clicsGlitch[registro.s] = 0;
+        var base = cacheDibujos[registro.s];
+        if (base && base.lienzo !== lienzo) {
+          var ctx = lienzo.getContext("2d");
+          ctx.clearRect(0, 0, lienzo.width, lienzo.height);
+          ctx.drawImage(base.lienzo, 0, 0);
+        }
+        mostrarVirus("dibujo restaurado.");
+      } else {
+        clicsGlitch[registro.s] = veces;
+        glitch(lienzo, sorteador(hash(registro.s + "clic" + Date.now())), 2);
+      }
       bleepMini();
     });
     figura.addEventListener("mouseenter", function () {
@@ -4385,6 +4402,12 @@
 
   var masGlitch = function () {
     $$("canvas", pared).forEach(function (lienzo, i) {
+      if (lienzo.closest) {
+        var fig = lienzo.closest("figure");
+        if (fig && fig.getAttribute("data-render") !== "1") {
+          return;
+        }
+      }
       var azar = sorteador(hash("REG-" + Date.now() + "-" + i));
       glitch(lienzo, azar, 2);
     });
@@ -4464,6 +4487,7 @@
   };
 
   var cacheDibujos = {};
+  var clicsGlitch = {};
   var colaRender = [];
   var loteEnCurso = false;
   var modoLimpio = false;
@@ -4562,8 +4586,12 @@
       var imagen = new window.Image();
       imagen.onload = function () {
         if (imagen.naturalWidth === med.w && imagen.naturalHeight === med.h) {
+          var copia = document.createElement("canvas");
+          copia.width = med.w;
+          copia.height = med.h;
+          copia.getContext("2d").drawImage(imagen, 0, 0);
           lienzo.getContext("2d").drawImage(imagen, 0, 0);
-          var resultado = { lienzo: lienzo, perdido: false, secreto: buscarSecreto(tarea.registro.p) };
+          var resultado = { lienzo: copia, perdido: false, secreto: buscarSecreto(tarea.registro.p) };
           cacheDibujos[tarea.registro.s] = resultado;
           tarea.figura.__resultado = resultado;
           tarea.figura.setAttribute("data-render", "1");
@@ -4661,6 +4689,7 @@
   var actualizarTile = function (registro) {
     delete cacheDibujos[registro.s];
     delete cacheDibujos[registro.s + "|limpio"];
+    clicsGlitch[registro.s] = 0;
     $$("figure", pared).forEach(function (figura) {
       if (figura.getAttribute("data-seg") === registro.s) {
         var resultado = pintarDibujo(registro);
