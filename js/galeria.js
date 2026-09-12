@@ -3767,10 +3767,6 @@
     });
     figura.addEventListener("mouseenter", function () {
       melodiaDe(registro);
-      empezarHervor(figura);
-    });
-    figura.addEventListener("mouseleave", function () {
-      pararHervor(figura);
     });
     figura.addEventListener("keydown", function (evento) {
       if (evento.key === "Enter") {
